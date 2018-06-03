@@ -131,8 +131,8 @@ public class HttpUtil {
                         .append(params.get(key));
             }
         }
-        System.out.println("==============="+"请求Url"+"===============");
-        System.out.println(builder.toString());
+//        System.out.println("==============="+"请求Url"+"===============");
+//        System.out.println(builder.toString());
         return builder.toString();
     }
 }

@@ -8,6 +8,8 @@ public class UserBO {
 
     private String token;
 
+    private String env;
+
     public String getPhone() {
         return phone;
     }
@@ -30,5 +32,13 @@ public class UserBO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getEnv() {
+        return env;
+    }
+
+    public void setEnv(String env) {
+        this.env = env;
     }
 }

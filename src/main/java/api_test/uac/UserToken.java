@@ -3,6 +3,8 @@ package api_test.uac;
 import common.HttpRequest;
 import common.HttpUtil;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.time.DateUtils;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -12,7 +14,15 @@ import static common.HttpConfig.applicationJson;
 
 public class UserToken {
 
-    private static String getUserTokenUrl = "https://gmd.mdguanjia.com/pms-uac/oauth/token";
+    public final static String online = "https://gmd.mdguanjia.com/pms-uac/oauth/token";
+
+    public final static String tmp1 = "http://tpm1-gmd.mdguanjia.com/pms-uac/oauth/token";
+
+    public final static String tpm3 = "http://tpm3-gmd.mdguanjia.com/pms-uac/oauth/token";
+
+    public  static String token = "";
+
+
 
 
     public static String getToken(UserBO userBO){
@@ -23,7 +33,7 @@ public class UserToken {
         params.put("grant_type","password");
         params.put("scope","all");
         httpRequest.setParams(params);
-        httpRequest.setUrl(getUserTokenUrl);
+        httpRequest.setUrl(userBO.getEnv());
         httpRequest.setContentType(applicationJson);
         Map<String,String> header = new HashMap<String, String>();
         header.put("authorization","Basic c3dvcmQ6c3dvcmRfc2VjcmV0");
@@ -31,19 +41,25 @@ public class UserToken {
         String rep = HttpUtil.doPost(httpRequest);
         JSONObject json = JSONObject.fromObject(rep);
         JSONObject data = json.getJSONObject("data");
-        return data.getString("access_token");
+
+        StringBuffer str = new StringBuffer();
+        str.append( "bearer" );
+        str.append( " " );
+        str.append( data.getString( "access_token" ) );
+
+        return str.toString();
     }
 
     @Test
     public void getTokenByPwdTest(){
         HttpRequest httpRequest = new HttpRequest();
         Map<String,String> params = new HashMap<String, String>();
-        params.put("username","13175112092");
+        params.put("username","13177778888");
         params.put("password","1234567");
         params.put("grant_type","password");
         params.put("scope","all");
         httpRequest.setParams(params);
-        httpRequest.setUrl(getUserTokenUrl);
+        httpRequest.setUrl(tpm3);
         httpRequest.setContentType(applicationJson);
         Map<String,String> header = new HashMap<String, String>();
         header.put("authorization","Basic c3dvcmQ6c3dvcmRfc2VjcmV0");
@@ -58,10 +74,11 @@ public class UserToken {
     @Test
     public void getTokenTest(){
         UserBO userBO = new UserBO();
-        userBO.setPhone("13175112092");
+        userBO.setPhone("13177778888");
         userBO.setPwd("1234567");
-        String token = getToken(userBO);
-        System.out.println(token);
+        token = getToken(userBO);
     }
+
+
 
 }
