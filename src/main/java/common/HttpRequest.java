@@ -28,6 +28,11 @@ public class HttpRequest {
      */
     private JSONObject jsonObject;
 
+    /**
+     * map参数
+     */
+    private Map<String,String> params;
+
 
     public Map<String, String> getHeader() {
         return header;
@@ -58,5 +63,13 @@ public class HttpRequest {
 
     public void setJsonObject(JSONObject jsonObject) {
         this.jsonObject = jsonObject;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
     }
 }

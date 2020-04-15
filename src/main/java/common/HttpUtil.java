@@ -1,6 +1,8 @@
 package common;
 
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -14,7 +16,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.util.List;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -30,7 +32,14 @@ public class HttpUtil {
 
         CloseableHttpClient httpclient = HttpClientBuilder.create().build();
         String response = new String();
-        HttpPost post = new HttpPost(httpRequesth.getUrl());
+        String requestUrl;
+        if(!httpRequesth.getParams().isEmpty()){
+            requestUrl = getRequestUrl(httpRequesth.getUrl(), httpRequesth.getParams());
+        }
+        else {
+            requestUrl = httpRequesth.getUrl();
+        }
+        HttpPost post = new HttpPost(requestUrl);
         if (!httpRequesth.getContentType().isEmpty()){
             post.addHeader(HTTP.CONTENT_TYPE,httpRequesth.getContentType());
         }
@@ -40,9 +49,11 @@ public class HttpUtil {
                 post.addHeader(key,val);
             }
         }
-        StringEntity reqEntity = new StringEntity(httpRequesth.getJsonObject().toString(), HTTP.UTF_8);
-        reqEntity.setContentEncoding("UTF-8");
-        post.setEntity(reqEntity);
+        if(StringUtils.isNotBlank(ObjectUtils.toString(httpRequesth.getJsonObject()))){
+            StringEntity reqEntity = new StringEntity(httpRequesth.getJsonObject().toString(), HTTP.UTF_8);
+            reqEntity.setContentEncoding("UTF-8");
+            post.setEntity(reqEntity);
+        }
         try {
             HttpResponse res = httpclient.execute(post);
             System.out.println("HttpStatus:"+res.getStatusLine().getStatusCode());
@@ -56,29 +67,31 @@ public class HttpUtil {
 
 
     /**
-     * get请求
-     * @param url params
+     *
+     * @param httpRequest
      * @return
      */
-    public static JSONObject doGet(String url, Map<String, String> params) {
-        JSONObject httpGetResponse = null;
+    public static String doGet(HttpRequest httpRequest) {
+        String httpGetResponse = null;
+        String requestUrl;
+        if (!httpRequest.getParams().isEmpty()){
+            requestUrl = getRequestUrl(httpRequest.getUrl(), httpRequest.getParams());
+        }
+        else {
+            requestUrl = httpRequest.getUrl();
+        }
+        HttpGet httpGet = new HttpGet(requestUrl);
+         if (!httpRequest.getHeader().isEmpty()){
+             for (String key:httpRequest.getHeader().keySet()){
+                 String val = httpRequest.getHeader().get(key).toString();
+                 httpGet.addHeader(key,val);
+             }
+         }
         try {
-            String requestUrl = getRequestUrl(url, params);
-            httpGetResponse = null;
             HttpClient client = new DefaultHttpClient();
-            //发送get请求
-            HttpGet request = new HttpGet(requestUrl);
-            HttpResponse response = client.execute(request);
-            /**请求发送成功，并得到响应**/
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                /**读取服务器返回过来的json字符串数据**/
-                String strResult = EntityUtils.toString(response.getEntity());
-                httpGetResponse = JSONObject.fromObject(strResult);
-            }
-            else{
-                String strResult = EntityUtils.toString(response.getEntity());
-                httpGetResponse = JSONObject.fromObject(strResult);
-            }
+            HttpResponse response = client.execute(httpGet);
+            System.out.println("HttpStatus:"+response.getStatusLine().getStatusCode());
+            httpGetResponse = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,32 +99,29 @@ public class HttpUtil {
     }
 
 
-    /**
-     * post 请求
-     * @param url params
-     * @return
-     */
-    public static JSONObject doPostByUrl(String url, Map<String, String> params) {
-        JSONObject httpGetResponse = null;
-        try {
-            String requestUrl = getRequestUrl(url, params);
-            httpGetResponse = null;
-            HttpClient client = new DefaultHttpClient();
-            //发送POST请求
-            HttpPost request = new HttpPost(requestUrl);
-            HttpResponse response = client.execute(request);
-            /**请求发送成功，并得到响应**/
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                /**读取服务器返回过来的json字符串数据**/
-                String strResult = EntityUtils.toString(response.getEntity());
-                httpGetResponse = JSONObject.fromObject(strResult);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        return httpGetResponse;
-    }
+//    public static String doPostByUrl(HttpRequest httpRequesth) {
+//        JSONObject httpGetResponse = null;
+//
+//        try {
+//            String requestUrl = getRequestUrl(url, params);
+//            httpGetResponse = null;
+//            HttpClient client = new DefaultHttpClient();
+//            //发送POST请求
+//            HttpPost request = new HttpPost(requestUrl);
+//            HttpResponse response = client.execute(request);
+//            /**请求发送成功，并得到响应**/
+//            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+//                /**读取服务器返回过来的json字符串数据**/
+//                String strResult = EntityUtils.toString(response.getEntity());
+//                httpGetResponse = JSONObject.fromObject(strResult);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return httpGetResponse;
+//    }
 
 
     /**
@@ -151,183 +161,5 @@ public class HttpUtil {
         System.out.println("==============="+"请求Url"+"===============");
         System.out.println(builder.toString());
         return builder.toString();
-    }
-
-
-
-
-    /**
-     * post请求 -添加请求头
-     * @param url
-     * @param json
-     * @return
-     */
-    public static JSONObject doPost(String url, JSONObject json,String headerName,String headerValue){
-
-        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(url);
-        post.addHeader(HTTP.CONTENT_TYPE,"application/json");
-        post.addHeader(headerName,headerValue);
-        JSONObject response = null;
-        try {
-            StringEntity reqEntity = new StringEntity(json.toString(), HTTP.UTF_8);
-            reqEntity.setContentEncoding("UTF-8");
-            reqEntity.setContentType("application/json");//发送json数据需要设置contentType
-            post.setEntity(reqEntity);
-            HttpResponse res = httpclient.execute(post);
-            res.setHeader("Content-type", "application/json;charset=UTF-8");
-            if(res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
-                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
-                response = JSONObject.fromObject(result);
-            }
-            else{
-                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
-                response = JSONObject.fromObject(result);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return response;
-    }
-
-
-    /**
-     * post请求
-     * @param url
-     * @param json
-     * @return
-     */
-    public static JSONObject doPost(String url, JSONObject json){
-
-        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(url);
-        post.addHeader(HTTP.CONTENT_TYPE,"application/json");
-
-        JSONObject response = null;
-        try {
-            StringEntity reqEntity = new StringEntity(json.toString(), HTTP.UTF_8);
-            reqEntity.setContentEncoding("UTF-8");
-            reqEntity.setContentType("application/json");//发送json数据需要设置contentType
-            post.setEntity(reqEntity);
-            HttpResponse res = httpclient.execute(post);
-            res.setHeader("Content-type", "application/json;charset=UTF-8");
-            if(res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
-                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
-                response = JSONObject.fromObject(result);
-            }
-            else{
-                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
-                response = JSONObject.fromObject(result);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return response;
-    }
-
-    /**
-     * post请求在map对象中增加请求头
-     * @param url
-     * @param json
-     * @param header
-     * @return
-     */
-    public static JSONObject doPost(String url, JSONObject json,Map<String,String> header){
-
-        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(url);
-        if (header.size()!=0){
-            for (Map.Entry<String,String> vo:header.entrySet()){
-                post.addHeader(vo.getKey(),vo.getValue());
-            }
-        }
-        post.addHeader(HTTP.CONTENT_TYPE,"application/json");
-
-        JSONObject response = null;
-        try {
-            StringEntity reqEntity = new StringEntity(json.toString(), HTTP.UTF_8);
-            reqEntity.setContentEncoding("UTF-8");
-            reqEntity.setContentType("application/json");//发送json数据需要设置contentType
-            post.setEntity(reqEntity);
-            HttpResponse res = httpclient.execute(post);
-            res.setHeader("Content-type", "application/json;charset=UTF-8");
-            if(res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
-                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
-                response = JSONObject.fromObject(result);
-            }
-            else{
-                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
-                response = JSONObject.fromObject(result);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return response;
-    }
-
-    /**
-     * post请求包含单个StringValues
-     * @param url
-     * @param values
-     * @return
-     */
-    public static JSONObject doPost(String url, String values){
-
-        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(url);
-        post.addHeader(HTTP.CONTENT_TYPE,"application/json");
-        JSONObject response = null;
-        try {
-            StringEntity reqEntity = new StringEntity(values, HTTP.UTF_8);
-            reqEntity.setContentEncoding("UTF-8");
-            reqEntity.setContentType("application/json");//发送json数据需要设置contentType
-            post.setEntity(reqEntity);
-            HttpResponse res = httpclient.execute(post);
-            res.setHeader("Content-type", "application/json;charset=UTF-8");
-            if(res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
-                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
-                response = JSONObject.fromObject(result);
-            }
-            else{
-                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
-                response = JSONObject.fromObject(result);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return response;
-    }
-
-    /**
-     * post请求包含单个ListValues
-     * @param url
-     * @param values
-     * @return
-     */
-    public static JSONObject doPost(String url, List values){
-
-        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-        HttpPost post = new HttpPost(url);
-        post.addHeader(HTTP.CONTENT_TYPE,"application/json");
-        JSONObject response = null;
-        try {
-            StringEntity reqEntity = new StringEntity(values.toString(), HTTP.UTF_8);
-            reqEntity.setContentEncoding("UTF-8");
-            reqEntity.setContentType("application/json");//发送json数据需要设置contentType
-            post.setEntity(reqEntity);
-            HttpResponse res = httpclient.execute(post);
-            res.setHeader("Content-type", "application/json;charset=UTF-8");
-            if(res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
-                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
-                response = JSONObject.fromObject(result);
-            }
-            else{
-                String result = EntityUtils.toString(res.getEntity());// 返回json格式：
-                response = JSONObject.fromObject(result);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return response;
     }
 }

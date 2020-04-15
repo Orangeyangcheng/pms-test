@@ -1,4 +1,4 @@
-package ApiTest;
+package api_test;
 
 import common.HttpRequest;
 import common.HttpUtil;
