@@ -1,10 +1,8 @@
 package common;
 
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -24,7 +22,7 @@ import java.util.Set;
 public class HttpUtil {
 
     /**
-     *
+     * post请求
      * @param httpRequesth
      * @return
      */
@@ -67,7 +65,7 @@ public class HttpUtil {
 
 
     /**
-     *
+     * get请求
      * @param httpRequest
      * @return
      */
@@ -97,31 +95,6 @@ public class HttpUtil {
         }
         return httpGetResponse;
     }
-
-
-
-//    public static String doPostByUrl(HttpRequest httpRequesth) {
-//        JSONObject httpGetResponse = null;
-//
-//        try {
-//            String requestUrl = getRequestUrl(url, params);
-//            httpGetResponse = null;
-//            HttpClient client = new DefaultHttpClient();
-//            //发送POST请求
-//            HttpPost request = new HttpPost(requestUrl);
-//            HttpResponse response = client.execute(request);
-//            /**请求发送成功，并得到响应**/
-//            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-//                /**读取服务器返回过来的json字符串数据**/
-//                String strResult = EntityUtils.toString(response.getEntity());
-//                httpGetResponse = JSONObject.fromObject(strResult);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return httpGetResponse;
-//    }
 
 
     /**
