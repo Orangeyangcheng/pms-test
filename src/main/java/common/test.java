@@ -1,7 +1,13 @@
 package common;
 
 import com.github.kevinsawicki.http.HttpRequest;
+import mybatis.dao.PmsUserDao;
+import mybatis.pojo.PmsUser;
+import mybatis.util.MyBatisUtil;
+import org.apache.ibatis.session.SqlSession;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 public class test {
 
@@ -10,5 +16,18 @@ public class test {
         String response = HttpRequest.get("https://www.baidu.com").body();
         System.out.println(response);
     }
+
+    @Test
+    public void mysqlTest(){
+        SqlSession sqlSession = MyBatisUtil.getSqlSession();
+        PmsUserDao pmsUserDao = sqlSession.getMapper(PmsUserDao.class);
+        List<PmsUser> pmsUsers = pmsUserDao.getPmsUserList();
+
+        for (PmsUser pmsUser :pmsUsers){
+            System.out.println(pmsUser);
+        }
+        sqlSession.close();
+    }
+
 
 }

@@ -4,14 +4,12 @@ import net.sf.json.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
@@ -42,7 +40,7 @@ public class HttpUtil {
                 post.addHeader(key,val);
             }
         }
-        StringEntity reqEntity = new StringEntity(httpRequesth.getJsonObject().toString(),HTTP.UTF_8);
+        StringEntity reqEntity = new StringEntity(httpRequesth.getJsonObject().toString(), HTTP.UTF_8);
         reqEntity.setContentEncoding("UTF-8");
         post.setEntity(reqEntity);
         try {
@@ -172,7 +170,7 @@ public class HttpUtil {
         post.addHeader(headerName,headerValue);
         JSONObject response = null;
         try {
-            StringEntity reqEntity = new StringEntity(json.toString(),HTTP.UTF_8);
+            StringEntity reqEntity = new StringEntity(json.toString(), HTTP.UTF_8);
             reqEntity.setContentEncoding("UTF-8");
             reqEntity.setContentType("application/json");//发送json数据需要设置contentType
             post.setEntity(reqEntity);
@@ -207,7 +205,7 @@ public class HttpUtil {
 
         JSONObject response = null;
         try {
-            StringEntity reqEntity = new StringEntity(json.toString(),HTTP.UTF_8);
+            StringEntity reqEntity = new StringEntity(json.toString(), HTTP.UTF_8);
             reqEntity.setContentEncoding("UTF-8");
             reqEntity.setContentType("application/json");//发送json数据需要设置contentType
             post.setEntity(reqEntity);
@@ -247,7 +245,7 @@ public class HttpUtil {
 
         JSONObject response = null;
         try {
-            StringEntity reqEntity = new StringEntity(json.toString(),HTTP.UTF_8);
+            StringEntity reqEntity = new StringEntity(json.toString(), HTTP.UTF_8);
             reqEntity.setContentEncoding("UTF-8");
             reqEntity.setContentType("application/json");//发送json数据需要设置contentType
             post.setEntity(reqEntity);
@@ -280,7 +278,7 @@ public class HttpUtil {
         post.addHeader(HTTP.CONTENT_TYPE,"application/json");
         JSONObject response = null;
         try {
-            StringEntity reqEntity = new StringEntity(values,HTTP.UTF_8);
+            StringEntity reqEntity = new StringEntity(values, HTTP.UTF_8);
             reqEntity.setContentEncoding("UTF-8");
             reqEntity.setContentType("application/json");//发送json数据需要设置contentType
             post.setEntity(reqEntity);
@@ -313,7 +311,7 @@ public class HttpUtil {
         post.addHeader(HTTP.CONTENT_TYPE,"application/json");
         JSONObject response = null;
         try {
-            StringEntity reqEntity = new StringEntity(values.toString(),HTTP.UTF_8);
+            StringEntity reqEntity = new StringEntity(values.toString(), HTTP.UTF_8);
             reqEntity.setContentEncoding("UTF-8");
             reqEntity.setContentType("application/json");//发送json数据需要设置contentType
             post.setEntity(reqEntity);
