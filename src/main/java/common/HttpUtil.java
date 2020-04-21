@@ -31,7 +31,7 @@ public class HttpUtil {
         CloseableHttpClient httpclient = HttpClientBuilder.create().build();
         String response = new String();
         String requestUrl;
-        if(!httpRequesth.getParams().isEmpty()){
+        if(StringUtils.isNotBlank(ObjectUtils.toString(httpRequesth.getParams()))){
             requestUrl = getRequestUrl(httpRequesth.getUrl(), httpRequesth.getParams());
         }
         else {
