@@ -5,6 +5,6 @@
 
 <mapper namespace="mybatis.dao.PmsUserDao">
     <select id="getPmsUserList" resultType="mybatis.pojo.PmsUser">
-        select * from my_data.pms_user
+        select * from pms_uac_db.pms_user limit 10
     </select>
 </mapper>
