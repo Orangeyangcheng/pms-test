@@ -29,5 +29,14 @@ public class test {
         sqlSession.close();
     }
 
+    @Test
+    public void getUserTest(){
+        SqlSession sqlSession = MyBatisUtil.getSqlSession();
+        PmsUserDao pmsUserDao = sqlSession.getMapper(PmsUserDao.class);
+        PmsUser pmsUsers = pmsUserDao.getUserByPhone("13175112091");
+        System.out.println( pmsUsers );
+        sqlSession.close();
+    }
+
 
 }

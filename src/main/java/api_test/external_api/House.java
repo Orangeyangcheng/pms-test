@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static common.BeautifyJson.beautifyJson;
 import static common.HttpConfig.applicationJson;
 
 public class House {
@@ -31,7 +32,7 @@ public class House {
         body.put( "houseManagerName","系统管理员" );
         body.put( "houseManagerTel","18899998888" );
 
-        body.put( "houseMode",1 );
+        body.put( "houseMode",2 );
         body.put( "kitchenNum",1 );
         body.put( "outerHouseCode","WB"+String.valueOf( System.currentTimeMillis() ) );
         JSONObject roomDesc = new JSONObject(  );
@@ -81,12 +82,12 @@ public class House {
         httpRequest.setContentType(applicationJson);
         JSONObject houseParams = houseParams();
         httpRequest.setJsonObject( houseParams );
-        System.out.println( com.alibaba.fastjson.JSONObject.toJSONString( houseParams,true ) );
+        System.out.println(beautifyJson(houseParams));
 
         String rep = HttpUtil.doPost( httpRequest );
         JSONObject repJson = JSONObject.fromObject( rep );
 
-        System.out.println( com.alibaba.fastjson.JSONObject.toJSONString( repJson,true ) );
+        System.out.println(beautifyJson(repJson));
 
     }
 

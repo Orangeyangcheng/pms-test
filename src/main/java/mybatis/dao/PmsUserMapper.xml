@@ -4,7 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mybatis.dao.PmsUserDao">
+
     <select id="getPmsUserList" resultType="mybatis.pojo.PmsUser">
-        select * from pms_uac_db.pms_user limit 10
+        select * from pms_uac_db.pms_user
+    </select>
+
+    <select id="getUserByPhone" resultType="mybatis.pojo.PmsUser" parameterType="String">
+            select * from pms_uac_db.pms_user where phone = #{phone}
     </select>
 </mapper>
