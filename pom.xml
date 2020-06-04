@@ -70,7 +70,12 @@
             <artifactId>idlefish</artifactId>
             <version>20200430</version>
         </dependency>
-
+        <!-- sendEmail  -->
+        <dependency>
+            <groupId>io.github.biezhi</groupId>
+            <artifactId>oh-my-email</artifactId>
+            <version>0.0.4</version>
+        </dependency>
     </dependencies>
 
     <!--在build中配置resources，来防止我们资源导出失败的问题-->

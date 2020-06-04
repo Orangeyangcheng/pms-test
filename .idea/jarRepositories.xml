@@ -8,8 +8,18 @@
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="http://116.62.130.63:8081/nexus/content/groups/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
       <option name="name" value="Maven Central repository" />
       <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="public-snapshots" />
+      <option name="name" value="public-snapshots" />
+      <option name="url" value="http://116.62.130.63:8081/nexus/content/groups/public/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="jboss.community" />
