@@ -64,6 +64,12 @@
             <version>3.0</version>
             <scope>test</scope>
         </dependency>
+        <!-- Idlefish SDK -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>idlefish</artifactId>
+            <version>20200430</version>
+        </dependency>
 
     </dependencies>
 
