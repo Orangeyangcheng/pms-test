@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TestDebug"
+           tests="1"
+           failures="0"
+           errors="0"
+           skipped="0"
+           time="1.999">
+  <properties />
+  
+  
+            <testcase name="loginByPassWord_通过账号密码登录" time="1.999" classname="api_test.base_test.UserTest" />
+      
+</testsuite>

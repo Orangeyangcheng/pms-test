@@ -4,14 +4,16 @@ import api_test.house.HouseBO;
 import api_test.uac.UserBO;
 import api_test.uac.UserToken;
 import common.BeautifyJson;
+import common.DataSupport;
 import common.HttpRequest;
 import common.HttpUtil;
+import mybatis.pojo.Community;
+import mybatis.pojo.PmsStore;
 import net.sf.json.JSONObject;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,12 +27,15 @@ public class HouseTest {
 
     private static String access_token = "";
 
+    private static String account = "";
+
     private static String saveHouse = "http://tpm1-gmd.mdguanjia.com/pms-hsc/house/inner/save";
 
     @BeforeClass(enabled = true)
     public static void getToken (){
         UserBO userBO = new UserBO();
-        userBO.setPhone("13133373338");
+        account = "13133373338";
+        userBO.setPhone(account);
         userBO.setPwd("1234567");
         userBO.setEnv( tmp1 );
         access_token = UserToken.getToken(userBO);
@@ -43,8 +48,8 @@ public class HouseTest {
 
     public static JSONObject buildHouseParams(HouseBO houseBO){
         JSONObject houseParams = new JSONObject();
-        houseParams.put( "cityId",411200 );
-        houseParams.put( "cityName","三门峡市" );
+        houseParams.put( "cityId",houseBO.getCommunity().getCityId() );
+        houseParams.put( "cityName",houseBO.getCommunity().getCityName() );
         //图片列表
         List commonPics = new ArrayList();
         houseParams.put( "commonPics",commonPics );
@@ -72,17 +77,16 @@ public class HouseTest {
 
         houseParams.put( "commonPics", commonPics);
 
-
         //地址信息
-        houseParams.put( "communityAddress","河南省三门峡市义马市香山街18号" );
-        houseParams.put( "communityId",houseBO.getCommunityId());
-        houseParams.put( "communityName","连银小区");
+        houseParams.put( "communityAddress",houseBO.getCommunity().getAddress());
+        houseParams.put( "communityId",houseBO.getCommunity().getId());
+        houseParams.put( "communityName",houseBO.getCommunity().getCommunityName());
         houseParams.put( "currentFloor","1" );
         houseParams.put( "decorateLevel","3" );
         houseParams.put( "districtId",411281 );
         houseParams.put( "districtName","" );
-        houseParams.put( "latitude",houseBO.getLatitude() );
-        houseParams.put( "longitude",houseBO.getLongitude() );
+        houseParams.put( "latitude",houseBO.getCommunity().getLatitude() );
+        houseParams.put( "longitude",houseBO.getCommunity().getLongitude() );
 
         //房屋设施
         List facilityItemList = new ArrayList();
@@ -109,7 +113,7 @@ public class HouseTest {
         houseParams.put( "houseManager",houseManager );
         //房源描述
         JSONObject roomDesc = new JSONObject();
-        roomDesc.put( "roomDesc","自动化脚本测试房源" );
+        roomDesc.put( "roomDesc","自动化脚本测试房源,编号："+System.currentTimeMillis() );
         List tenancyCondList = new ArrayList();
         roomDesc.put( "tenancyCondList", tenancyCondList);
         houseParams.put( "roomDesc",roomDesc );
@@ -169,16 +173,22 @@ public class HouseTest {
 
     @Test
     public void saveHouse_新建整租房源(){
+        //随机获取小区信息
+        Community community = new Community();
+        community = DataSupport.getCommunity();
+
+        List<PmsStore> pmsStores = (List<PmsStore>) new PmsStore();
+        pmsStores = DataSupport.queryPmsStore(1,2);
+
+
         HouseBO houseBO = new HouseBO();
-        houseBO.setCommunityId( 60115 );
+        houseBO.setCommunity( community );
         houseBO.setHouseManagerId( 409 );
         houseBO.setHouseManagerName( "系统管理员" );
         houseBO.setHouseManagerTel( "13133373338" );
-        houseBO.setFlatBuilding( "25" );
+        houseBO.setFlatBuilding( "27" );
         houseBO.setFlatUnit( "2" );
         houseBO.setFlatDoor( "308" );
-        houseBO.setLatitude( "34.753261" );
-        houseBO.setLongitude( "111.88122" );
         JSONObject params = buildHouseParams( houseBO );
         System.out.println( beautifyJson(params) );
 

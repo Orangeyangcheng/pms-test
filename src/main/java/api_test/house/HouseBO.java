@@ -1,5 +1,7 @@
 package api_test.house;
 
+import mybatis.pojo.Community;
+
 public class HouseBO {
 
     private int communityId;
@@ -19,6 +21,56 @@ public class HouseBO {
     private String flatDoor;
 
     private String flatUnit;
+
+    private String communityAddress;
+
+    private String communityName;
+
+    private int cityId;
+
+    private String cityName;
+
+    private Community community;
+
+    public Community getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(Community community) {
+        this.community = community;
+    }
+
+    public int getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCommunityAddress() {
+        return communityAddress;
+    }
+
+    public void setCommunityAddress(String communityAddress) {
+        this.communityAddress = communityAddress;
+    }
+
+    public String getCommunityName() {
+        return communityName;
+    }
+
+    public void setCommunityName(String communityName) {
+        this.communityName = communityName;
+    }
 
     public String getLatitude() {
         return latitude;

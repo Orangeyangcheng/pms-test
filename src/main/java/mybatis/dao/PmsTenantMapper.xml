@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.dao.PmsTenantDao">
+
+    <select id="getTenantInfo" resultType="mybatis.pojo.PmsTenant" parameterType = "String" resultMap="pmsTenantResultMap" >
+        SELECT id,
+        tenant_id,
+        tenant_name,
+        admin_phone
+        FROM pms_uac_db.pms_tenant
+        WHERE admin_phone = #{phone};
+    </select>
+    <resultMap id="pmsTenantResultMap" type="mybatis.pojo.PmsTenant">
+        <id property="id" column="id"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="tenantName" column="tenant_name"/>
+        <result property="adminPhone" column="admin_phone"/>
+    </resultMap>
+
+    <select id="getStoreInfo" resultType="mybatis.pojo.PmsStore" parameterType = "int" resultMap="pmsStoreResultMap" >
+        SELECT id,
+        tenant_id,
+        dept_name,
+        province_id,
+        city_id,
+        county_id,
+        address,
+        remark
+        FROM pms_uac_db.pms_dept
+        WHERE dept_category = 4
+        AND tenant_id = #{tenantId}
+        AND city_id = #{cityId}
+        AND is_deleted = 0;
+    </select>
+    <resultMap id="pmsStoreResultMap" type="mybatis.pojo.PmsStore">
+        <id property="id" column="id"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="provinceId" column="province_id"/>
+        <result property="cityId" column="city_id"/>
+        <result property="countyId" column="county_id"/>
+    </resultMap>
+</mapper>

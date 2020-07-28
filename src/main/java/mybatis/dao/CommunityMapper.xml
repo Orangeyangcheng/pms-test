@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.dao.CommunityDao">
+    <select id="getARandCommunity" resultType="mybatis.pojo.Community" resultMap="communityResultMap">
+        SELECT id,
+        community_name,
+        address,
+        longitude,
+        latitude ,
+        province_id,
+        province_name,
+        city_id,
+        city_name,
+        area_id ,
+        area_name,
+        source,
+        status
+        FROM pms_mdc_db.library_community lc1
+        WHERE lc1.id >= RAND() *
+        (SELECT MAX(id)
+        FROM pms_mdc_db.library_community ) LIMIT 1;
+    </select>
+    <resultMap id="communityResultMap" type="mybatis.pojo.Community">
+        <id property="id" column="id"/>
+        <result property="communityName" column="community_name"/>
+        <result property="provinceId" column="province_id"/>
+        <result property="provinceName" column="province_name"/>
+        <result property="cityId" column="city_id"/>
+        <result property="cityName" column="city_name"/>
+        <result property="areaId" column="area_id"/>
+        <result property="areaName" column="area_name"/>
+    </resultMap>
+</mapper>
