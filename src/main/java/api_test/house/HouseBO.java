@@ -32,6 +32,36 @@ public class HouseBO {
 
     private Community community;
 
+    private int storeId;
+
+    private String storeName;
+
+    private int houseMode;
+
+    public int getHouseMode() {
+        return houseMode;
+    }
+
+    public void setHouseMode(int houseMode) {
+        this.houseMode = houseMode;
+    }
+
+    public int getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
     public Community getCommunity() {
         return community;
     }

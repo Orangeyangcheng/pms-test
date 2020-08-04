@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.dao.PmsHouseDao">
+    <select id="queryRoomInfo" resultType="mybatis.pojo.HouseRoom" resultMap="HouseRoomResultMap">
+        SELECT room_code,
+        room_status
+        FROM pms_hsc_db.house_room
+        WHERE room_code = #{roomCode};
+    </select>
+    <resultMap id="HouseRoomResultMap" type="mybatis.pojo.HouseRoom">
+        <result property="roomCode" column="room_code"/>
+        <result property="roomStatus" column="room_status"/>
+    </resultMap>
+</mapper>

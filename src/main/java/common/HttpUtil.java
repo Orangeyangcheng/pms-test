@@ -54,7 +54,7 @@ public class HttpUtil {
         }
         try {
             HttpResponse res = httpclient.execute(post);
-            System.out.println("HttpStatus:"+res.getStatusLine().getStatusCode());
+//            System.out.println("HttpStatus:"+res.getStatusLine().getStatusCode());
             response = EntityUtils.toString(res.getEntity());
         }
         catch (Exception e) {

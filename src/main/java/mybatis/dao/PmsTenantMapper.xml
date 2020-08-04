@@ -43,4 +43,18 @@
         <result property="cityId" column="city_id"/>
         <result property="countyId" column="county_id"/>
     </resultMap>
+
+    <select id="queryUserInfo" resultType="mybatis.pojo.PmsUser" parameterType = "String" resultMap="pmsUserResultMap" >
+        SELECT id,
+        phone,
+        account,
+        tenant_id
+        from pms_uac_db.pms_user
+        WHERE phone = #{phone};
+    </select>
+    <resultMap id="pmsUserResultMap" type="mybatis.pojo.PmsUser">
+        <id property="id" column="id"/>
+        <result property="name" column="account"/>
+        <result property="tenantId" column="tenant_id"/>
+    </resultMap>
 </mapper>

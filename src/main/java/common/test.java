@@ -2,12 +2,10 @@ package common;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import mybatis.dao.CommunityDao;
+import mybatis.dao.PmsHouseDao;
 import mybatis.dao.PmsTenantDao;
 import mybatis.dao.PmsUserDao;
-import mybatis.pojo.Community;
-import mybatis.pojo.PmsStore;
-import mybatis.pojo.PmsTenant;
-import mybatis.pojo.PmsUser;
+import mybatis.pojo.*;
 import mybatis.util.MyBatisUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.testng.annotations.Test;
@@ -62,7 +60,7 @@ public class test {
     }
 
     @Test
-    public void getPmsStorefo(){
+    public void getPmsStoreInfo(){
         SqlSession sqlSession = MyBatisUtil.getSqlSession();
         PmsTenantDao pmsTenantDao = sqlSession.getMapper( PmsTenantDao.class );
         List<PmsStore> pmsStores = pmsTenantDao.getStoreInfo( 95023566,330100 );
@@ -72,5 +70,22 @@ public class test {
         sqlSession.close();
     }
 
+    @Test
+    public void queryRoomInfo(){
+        SqlSession sqlSession = MyBatisUtil.getSqlSession();
+        PmsHouseDao pmsHouseDao = sqlSession.getMapper( PmsHouseDao.class );
+        HouseRoom houseRoom = pmsHouseDao.queryRoomInfo( "d0005943" );
+        System.out.println( houseRoom );
+        sqlSession.close();
+    }
+
+    @Test
+    public void queryUserInfo(){
+        SqlSession sqlSession = MyBatisUtil.getSqlSession();
+        PmsTenantDao pmsTenantDao = sqlSession.getMapper( PmsTenantDao.class );
+        PmsUser pmsUser = pmsTenantDao.queryUserInfo( "13133373338" );
+        System.out.println( pmsUser );
+        sqlSession.close();
+    }
 
 }

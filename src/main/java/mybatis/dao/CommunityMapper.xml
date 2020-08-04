@@ -21,7 +21,9 @@
         FROM pms_mdc_db.library_community lc1
         WHERE lc1.id >= RAND() *
         (SELECT MAX(id)
-        FROM pms_mdc_db.library_community ) LIMIT 1;
+        FROM pms_mdc_db.library_community )
+        AND status = 2
+        LIMIT 1;
     </select>
     <resultMap id="communityResultMap" type="mybatis.pojo.Community">
         <id property="id" column="id"/>

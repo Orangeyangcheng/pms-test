@@ -19,5 +19,6 @@
         <mapper resource="mybatis/dao/PmsUserMapper.xml"/>
         <mapper resource="mybatis/dao/CommunityMapper.xml"/>
         <mapper resource="mybatis/dao/PmsTenantMapper.xml"/>
+        <mapper resource="mybatis/dao/PmsHouseMapper.xml"/>
     </mappers>
 </configuration>
