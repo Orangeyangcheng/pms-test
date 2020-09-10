@@ -54,8 +54,8 @@ public class UserToken {
     public void getTokenByPwdTest(){
         HttpRequest httpRequest = new HttpRequest();
         Map<String,String> params = new HashMap<String, String>();
-        params.put("username","13177778888");
-        params.put("password","1234567");
+        params.put("username","13175112091");
+        params.put("password","0809001");
         params.put("grant_type","password");
         params.put("scope","all");
         httpRequest.setParams(params);

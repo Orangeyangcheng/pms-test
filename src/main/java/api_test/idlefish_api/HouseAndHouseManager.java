@@ -34,7 +34,7 @@ public class HouseAndHouseManager {
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseItemUpdatestatusRequest req = new AlibabaIdleHouseItemUpdatestatusRequest();
         // 闲鱼房源itemId
-        req.setItemId(Long.valueOf("623993003691"));
+        req.setItemId(Long.valueOf("626675301626"));
         // 房源的目标状态，-1表示删除；-2表示下架；0表示上架(只有下架的房源可以上架）
         req.setHouseStatus(-1L);
         AlibabaIdleHouseItemUpdatestatusResponse rsp = client.execute(req);
@@ -50,7 +50,7 @@ public class HouseAndHouseManager {
     public void queryRoomStatus() throws ApiException {
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseItemQueryRequest req = new AlibabaIdleHouseItemQueryRequest();
-        req.setItemId(623999658255L);
+        req.setItemId(625471945741L);
         AlibabaIdleHouseItemQueryResponse rsp = client.execute(req);
         JSONObject rspJson = JSONObject.fromObject( rsp.getBody() );
         System.out.println(beautifyJson(rspJson));
@@ -66,7 +66,7 @@ public class HouseAndHouseManager {
     public void queryuser() throws ApiException {
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseUserQueryuserRequest req = new AlibabaIdleHouseUserQueryuserRequest();
-        req.setUserNick("cheng_cui25");
+        req.setUserNick("tb9877230");
         AlibabaIdleHouseUserQueryuserResponse rsp = client.execute(req);
         JSONObject rspJson = JSONObject.fromObject( rsp.getBody() );
         System.out.println(beautifyJson(rspJson));
@@ -94,7 +94,7 @@ public class HouseAndHouseManager {
     public void delhousemanager() throws ApiException {
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseUserDelhousemanagerRequest req = new AlibabaIdleHouseUserDelhousemanagerRequest();
-        req.setUserNick("cheng_cui25");
+        req.setUserNick("傻丫头勇闯天涯");
         AlibabaIdleHouseUserDelhousemanagerResponse rsp = client.execute(req);
         JSONObject rspJson = JSONObject.fromObject( rsp.getBody() );
         System.out.println(beautifyJson(rspJson));
@@ -110,7 +110,7 @@ public class HouseAndHouseManager {
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseIdleRentTradeNotifyrentcloseRequest req = new AlibabaIdleHouseIdleRentTradeNotifyrentcloseRequest();
         //闲鱼租约Id
-        req.setContractId(23578412220L);
+        req.setContractId(24500942220L);
         AlibabaIdleHouseIdleRentTradeNotifyrentcloseResponse rsp = client.execute(req);
         JSONObject rspJson = JSONObject.fromObject( rsp.getBody() );
         System.out.println(beautifyJson(rspJson));
@@ -125,7 +125,7 @@ public class HouseAndHouseManager {
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseIdleRentTradeCancelcontractRequest req = new AlibabaIdleHouseIdleRentTradeCancelcontractRequest();
         //闲鱼租约Id
-        req.setContractId("24113342220");
+        req.setContractId("25216302220");
         AlibabaIdleHouseIdleRentTradeCancelcontractResponse rsp = client.execute(req);
         JSONObject rspJson = JSONObject.fromObject( rsp.getBody() );
         System.out.println(beautifyJson(rspJson));
@@ -140,7 +140,7 @@ public class HouseAndHouseManager {
 
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseIdleRentTradeQuerycontractRequest req = new AlibabaIdleHouseIdleRentTradeQuerycontractRequest();
-        req.setContractId("24113342220");
+        req.setContractId("24500942220");
         AlibabaIdleHouseIdleRentTradeQuerycontractResponse rsp = client.execute(req);
         JSONObject rspJson = JSONObject.fromObject( rsp.getBody() );
         System.out.println(beautifyJson(rspJson));
@@ -151,9 +151,9 @@ public class HouseAndHouseManager {
 
         String filePath = "C:\\Users\\10057\\Desktop\\contractId.txt";
         List list = readTxtFile2(filePath);
-        for (int i = 0; i < list.size(); i++) {
+
             int no = 1;
-            for ( int a = 0;a<=list.size();a++){
+            for ( int a = 0;a<list.size();a++){
 
                 TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
                 AlibabaIdleHouseIdleRentTradeQuerycontractRequest req = new AlibabaIdleHouseIdleRentTradeQuerycontractRequest();
@@ -170,13 +170,14 @@ public class HouseAndHouseManager {
 //                    System.out.println(list.get( a ).toString());
 
                 }
+                else {
+                    continue;
+                }
 
 //                System.out.println(beautifyJson(rspJson));
 
             }
 
-
-        }
 
     }
 
@@ -239,6 +240,69 @@ public class HouseAndHouseManager {
             e.printStackTrace();
         }
         return contractIds;
+    }
+
+
+
+    public List getItemId(JSONObject jsonObject){
+        JSONObject data =  jsonObject.getJSONObject( "data" );
+        List ItemIds = new ArrayList();
+        List cardList = new ArrayList();
+        cardList = data.getJSONArray( "cardList" );
+        for (int i = 0;i<cardList.size();i++){
+            JSONObject cardDatas = (JSONObject) cardList.get( i );
+            JSONObject cardData = cardDatas.getJSONObject( "cardData" );
+            String id = cardData.getString( "id" );
+            ItemIds.add( id );
+        }
+        return ItemIds;
+    }
+
+    public static JSONObject ReadFile(String path){
+        String laststr="";
+        File file=new File(path);
+        BufferedReader reader=null;
+        try{
+            reader=new BufferedReader(new FileReader(file));
+            String tempString=null;
+            //int line=1;
+            while((tempString=reader.readLine())!=null){
+            //System.out.println("line"+line+":"+tempString);
+                laststr=laststr+tempString;
+            //line++;
+            }
+            reader.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }finally{
+            if(reader!=null){
+                try{
+                    reader.close();
+                }catch(IOException el){
+                }  }  }
+        return JSONObject.fromObject( laststr );
+    }
+
+    @Test
+    public void jsonTest() throws ApiException {
+
+        JSONObject params = ReadFile( "C:\\Users\\10057\\Desktop\\json.txt" );
+
+        List ids = getItemId( params );
+
+        for (int i = 0;i<ids.size();i++){
+            TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
+            AlibabaIdleHouseItemUpdatestatusRequest req = new AlibabaIdleHouseItemUpdatestatusRequest();
+            // 闲鱼房源itemId
+            String id = ids.get( i ).toString();
+            req.setItemId( Long.valueOf( id ) );
+            // 房源的目标状态，-1表示删除；-2表示下架；0表示上架(只有下架的房源可以上架）
+            req.setHouseStatus(-2L);
+            AlibabaIdleHouseItemUpdatestatusResponse rsp = client.execute(req);
+            JSONObject rspJson = JSONObject.fromObject( rsp.getBody() );
+            System.out.println(beautifyJson(rspJson));
+        }
+
     }
 
 }

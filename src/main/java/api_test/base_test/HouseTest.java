@@ -3,6 +3,7 @@ package api_test.base_test;
 import api_test.house.HouseBO;
 import api_test.uac.UserBO;
 import api_test.uac.UserToken;
+import com.fht.common.utils.MultiCurrencyMoney;
 import com.mysql.cj.log.NullLogger;
 import common.BeautifyJson;
 import common.DataSupport;
@@ -10,18 +11,19 @@ import common.HttpRequest;
 import common.HttpUtil;
 import mybatis.pojo.*;
 import net.sf.json.JSONObject;
+import org.joda.time.DateTime;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static api_test.uac.PmsTenantOperation.addStore;
 import static api_test.uac.UserToken.tmp1;
+import static api_test.uac.UserToken.tpm3;
 import static common.BeautifyJson.beautifyJson;
 import static common.HttpConfig.applicationJson;
 
@@ -31,16 +33,16 @@ public class HouseTest {
 
 
 
-    private static String saveHouse = "http://tpm1-gmd.mdguanjia.com/pms-hsc/house/inner/save";
+    private static String saveHouse = "http://tpm3-gmd.mdguanjia.com/pms-hsc/house/inner/save";
 
     private static String roomRent = "http://tpm1-gmd.mdguanjia.com/pms-hsc/client/room/rent";
 
 
     public static UserBO getToken (){
         UserBO userBO = new UserBO();
-        userBO.setPhone("13133373338");
+        userBO.setPhone("13899939992");
         userBO.setPwd("1234567");
-        userBO.setEnv( tmp1 );
+        userBO.setEnv( tpm3 );
         PmsUser pmsUser = DataSupport.queryUserInfoByPhone( userBO.getPhone() );
         access_token = UserToken.getToken(userBO);
         userBO.setToken( access_token );
@@ -122,8 +124,8 @@ public class HouseTest {
         houseParams.put( "houseManager",houseManager );
         //房源描述
         JSONObject roomDesc = new JSONObject();
-        roomDesc.put( "roomDesc","自动化脚本测试房源,编号："+System.currentTimeMillis() );
-//        roomDesc.put( "roomDesc","测试 测试房源" );
+//        roomDesc.put( "roomDesc","自动化脚本测试房源,编号："+System.currentTimeMillis() );
+        roomDesc.put( "roomDesc","测试 测试房源" );
         List tenancyCondList = new ArrayList();
         roomDesc.put( "tenancyCondList", tenancyCondList);
         houseParams.put( "roomDesc",roomDesc );
@@ -307,10 +309,16 @@ public class HouseTest {
         return houseParams;
     }
 
+    @BeforeClass
+    private static boolean isCheck(){
+        boolean isCheck = true;
+        return isCheck;
+    }
+
     /**
      * 整租房源
      */
-    @Test(invocationCount = 1,groups = "HouseMode=1")
+    @Test(invocationCount = 20,groups = "HouseMode=1")
     public void saveHouse_Test(){
         UserBO userBO = getToken();
         //随机获取小区信息
@@ -354,12 +362,17 @@ public class HouseTest {
         JSONObject repJson = JSONObject.fromObject( rep );
         System.out.println("========================"+"创建房源结果"+"========================");
         System.out.println(beautifyJson(repJson));
+
+        boolean i = isCheck();
+        if (i==true){
+
+        }
     }
 
     /**
      * 合租房源
      */
-    @Test(invocationCount = 1,groups = "HouseMode=2")
+    @Test(invocationCount = 20,groups = "HouseMode=2")
     public void saveHouseRoom_Test(){
         UserBO userBO = getToken();
         //随机获取小区信息
@@ -386,7 +399,7 @@ public class HouseTest {
         houseBO.setHouseManagerTel( userBO.getPhone() );
         houseBO.setStoreId( pmsStore.getId() );
         houseBO.setStoreName( pmsStore.getDeptName() );
-        houseBO.setHouseMode( 1 );//1-整租,2-合租
+        houseBO.setHouseMode( 2 );//1-整租,2-合租
         JSONObject params = buildHouseParams( houseBO );
         System.out.println("========================"+"创建房源信息"+"========================");
         System.out.println( beautifyJson(params) );
@@ -405,12 +418,16 @@ public class HouseTest {
         System.out.println(beautifyJson(repJson));
     }
 
+    public boolean saveHouseCheck(JSONObject jsonObject){ 
+        return true;
+    }
+
     @Test
     public void roomRent_Test(){
         UserBO userBO = getToken();
         JSONObject roomRentParams = new JSONObject();
         roomRentParams.put( "houseType",2 );
-        roomRentParams.put( "roomCode","d0005943" );
+        roomRentParams.put( "roomCode","d0006289" );
         roomRentParams.put( "operateType",1 );
         roomRentParams.put( "leaseType",1 );
         roomRentParams.put( "rentBeginTime","2020-07-30 17:02:18" );
@@ -476,4 +493,29 @@ public class HouseTest {
             }
         }
     }
+
+//    public static void main(String[] args) {
+//        Date newDay=new DateTime(new Date()).plusDays(1).toDate();
+//        SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+//        String date = sim.format(  newDay.getTime()  );
+//        System.out.println(date);
+//    }
+
+
+    public static void main(String[] args) {
+        int stayDays = 4;
+        int monthDays = 30;
+        Long paidFee = 2000L;
+        Long itemFee = paidFee - paidFee * stayDays / monthDays;
+        System.out.println(itemFee);
+
+        MultiCurrencyMoney itemFeeMul = new MultiCurrencyMoney(paidFee).divide( monthDays ).multiply(monthDays-stayDays);
+        System.out.println(itemFeeMul);
+
+        itemFeeMul = new MultiCurrencyMoney("2000").divide(monthDays).multiply(30 - stayDays);
+        System.out.println(itemFeeMul);
+    }
+
+
+
 }

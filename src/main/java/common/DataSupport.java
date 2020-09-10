@@ -6,6 +6,7 @@ import mybatis.dao.PmsTenantDao;
 import mybatis.pojo.*;
 import mybatis.util.MyBatisUtil;
 import org.apache.ibatis.session.SqlSession;
+import org.testng.annotations.DataProvider;
 
 import java.util.HashMap;
 import java.util.List;
@@ -126,6 +127,8 @@ public class DataSupport {
         System.out.println(randomInfo( 3 ));
 
     }
+
+
 
 
 }

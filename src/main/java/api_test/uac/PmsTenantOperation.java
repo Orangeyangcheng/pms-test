@@ -15,7 +15,7 @@ import static common.HttpConfig.applicationJson;
 
 public class PmsTenantOperation {
 
-    private static String addStoreUrl = "http://tpm1-gmd.mdguanjia.com/pms-uac/dept/addStore";
+    private static String addStoreUrl = "http://tpm3-gmd.mdguanjia.com/pms-uac/dept/addStore";
 
     public static PmsStore addStore(Community community,String token,int tenantId){
 
