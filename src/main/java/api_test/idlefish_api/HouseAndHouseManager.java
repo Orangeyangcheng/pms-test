@@ -34,7 +34,7 @@ public class HouseAndHouseManager {
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseItemUpdatestatusRequest req = new AlibabaIdleHouseItemUpdatestatusRequest();
         // 闲鱼房源itemId
-        req.setItemId(Long.valueOf("626675301626"));
+        req.setItemId(Long.valueOf("628255311100"));
         // 房源的目标状态，-1表示删除；-2表示下架；0表示上架(只有下架的房源可以上架）
         req.setHouseStatus(-1L);
         AlibabaIdleHouseItemUpdatestatusResponse rsp = client.execute(req);
@@ -66,7 +66,7 @@ public class HouseAndHouseManager {
     public void queryuser() throws ApiException {
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseUserQueryuserRequest req = new AlibabaIdleHouseUserQueryuserRequest();
-        req.setUserNick("tb9877230");
+        req.setUserNick("cheng_cui25");
         AlibabaIdleHouseUserQueryuserResponse rsp = client.execute(req);
         JSONObject rspJson = JSONObject.fromObject( rsp.getBody() );
         System.out.println(beautifyJson(rspJson));
@@ -80,7 +80,7 @@ public class HouseAndHouseManager {
     public void dellender() throws ApiException {
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseUserDellenderRequest req = new AlibabaIdleHouseUserDellenderRequest();
-        req.setUserNick("tb059804036");
+        req.setUserNick("cheng_cui25");
         AlibabaIdleHouseUserDellenderResponse rsp = client.execute(req);
         JSONObject rspJson = JSONObject.fromObject( rsp.getBody() );
         System.out.println(beautifyJson(rspJson));

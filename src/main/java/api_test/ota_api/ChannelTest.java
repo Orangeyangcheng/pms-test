@@ -4,6 +4,7 @@ import api_test.uac.UserBO;
 import common.HttpRequest;
 import common.HttpUtil;
 import net.sf.json.JSONObject;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -34,7 +35,7 @@ public class ChannelTest {
     }
 
 
-    @Test
+    @Test(invocationCount = 20)
     public void getChannelList_Test(){
         Map<String,String> header = new HashMap<String, String>();
         header.put( "Authorization",token );
@@ -51,6 +52,10 @@ public class ChannelTest {
         JSONObject repJson = JSONObject.fromObject( rep );
 
         System.out.println(beautifyJson(repJson));
+
+        Assert.assertTrue( repJson.getBoolean( "success" ),"assert success fail" );
+        Assert.assertEquals( repJson.getInt( "code" ),200,"assert code fail" );
+
     }
 
 }

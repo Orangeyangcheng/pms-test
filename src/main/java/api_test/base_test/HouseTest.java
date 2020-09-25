@@ -35,12 +35,12 @@ public class HouseTest {
 
     private static String saveHouse = "http://tpm3-gmd.mdguanjia.com/pms-hsc/house/inner/save";
 
-    private static String roomRent = "http://tpm1-gmd.mdguanjia.com/pms-hsc/client/room/rent";
+    private static String roomRent = "http://tpm3-gmd.mdguanjia.com/pms-hsc/client/room/rent";
 
 
     public static UserBO getToken (){
         UserBO userBO = new UserBO();
-        userBO.setPhone("13899939992");
+        userBO.setPhone("13199989991");
         userBO.setPwd("1234567");
         userBO.setEnv( tpm3 );
         PmsUser pmsUser = DataSupport.queryUserInfoByPhone( userBO.getPhone() );
@@ -153,12 +153,12 @@ public class HouseTest {
             List rentTypes = new ArrayList();
             JSONObject rentTypesInfo = new JSONObject();
             rentTypesInfo.put( "depositMonthNum", "1");
-            rentTypesInfo.put( "depositPrice", "9980.00");
+            rentTypesInfo.put( "depositPrice", "799");
             List feeTypes = new ArrayList();
             rentTypesInfo.put( "feeTypes", feeTypes);
             rentTypesInfo.put( "houseType", "");
-            rentTypesInfo.put( "rentMonthNum", "1");
-            rentTypesInfo.put( "rentMonthPrice", "9980");
+            rentTypesInfo.put( "rentMonthNum", "3");
+            rentTypesInfo.put( "rentMonthPrice", "799");
             rentTypes.add( rentTypesInfo );
             roomInfo.put( "rentTypes", rentTypes);
 
@@ -205,12 +205,12 @@ public class HouseTest {
             List rentTypesA = new ArrayList();
             JSONObject rentTypesInfoA = new JSONObject();
             rentTypesInfoA.put( "depositMonthNum", "1");
-            rentTypesInfoA.put( "depositPrice", "9980.00");
+            rentTypesInfoA.put( "depositPrice", "2999.00");
             List feeTypesA = new ArrayList();
             rentTypesInfoA.put( "feeTypes", feeTypesA);
             rentTypesInfoA.put( "houseType", "");
             rentTypesInfoA.put( "rentMonthNum", "1");
-            rentTypesInfoA.put( "rentMonthPrice", "9980");
+            rentTypesInfoA.put( "rentMonthPrice", "2999");
             rentTypesA.add( rentTypesInfoA );
             roomInfoA.put( "rentTypes", rentTypesA);
 
@@ -262,12 +262,12 @@ public class HouseTest {
             List rentTypesB = new ArrayList();
             JSONObject rentTypesInfoB = new JSONObject();
             rentTypesInfoB.put( "depositMonthNum", "1");
-            rentTypesInfoB.put( "depositPrice", "9981.00");
+            rentTypesInfoB.put( "depositPrice", "2999.00");
             List feeTypesB = new ArrayList();
             rentTypesInfoB.put( "feeTypes", feeTypesB);
             rentTypesInfoB.put( "houseType", "");
             rentTypesInfoB.put( "rentMonthNum", "1");
-            rentTypesInfoB.put( "rentMonthPrice", "9981");
+            rentTypesInfoB.put( "rentMonthPrice", "2999");
             rentTypesB.add( rentTypesInfoB );
             roomInfoB.put( "rentTypes", rentTypesB);
 
@@ -318,7 +318,7 @@ public class HouseTest {
     /**
      * 整租房源
      */
-    @Test(invocationCount = 20,groups = "HouseMode=1")
+    @Test(invocationCount = 10,groups = "HouseMode=1")
     public void saveHouse_Test(){
         UserBO userBO = getToken();
         //随机获取小区信息
@@ -372,7 +372,7 @@ public class HouseTest {
     /**
      * 合租房源
      */
-    @Test(invocationCount = 20,groups = "HouseMode=2")
+    @Test(invocationCount = 10,groups = "HouseMode=2")
     public void saveHouseRoom_Test(){
         UserBO userBO = getToken();
         //随机获取小区信息
