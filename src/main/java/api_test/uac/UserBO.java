@@ -10,7 +10,7 @@ public class UserBO {
 
     private String env;
 
-    private int tenantId;
+    private String tenantId;
 
     private String userName;
 
@@ -32,11 +32,11 @@ public class UserBO {
         this.userName = userName;
     }
 
-    public int getTenantId() {
+    public String getTenantId() {
         return tenantId;
     }
 
-    public void setTenantId(int tenantId) {
+    public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
     }
 

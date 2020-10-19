@@ -4,7 +4,7 @@ public class PmsUser {
     private int id;
     private String name;
     private String passWord;
-    private int tenantId;
+    private String tenantId;
     private String phone;
 
     public int getId() {
@@ -31,11 +31,11 @@ public class PmsUser {
         this.passWord = passWord;
     }
 
-    public int getTenantId() {
+    public String getTenantId() {
         return tenantId;
     }
 
-    public void setTenantId(int tenantId) {
+    public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
     }
 
@@ -58,7 +58,7 @@ public class PmsUser {
                 '}';
     }
 
-    public PmsUser(int id, String name, String passWord, int tenantId, String phone) {
+    public PmsUser(int id, String name, String passWord, String tenantId, String phone) {
         this.id = id;
         this.name = name;
         this.passWord = passWord;

@@ -4,7 +4,7 @@ public class PmsTenant {
 
     private int id;
 
-    private int tenantId;
+    private String tenantId;
 
     private String tenantName;
 
@@ -18,11 +18,11 @@ public class PmsTenant {
         this.id = id;
     }
 
-    public int getTenantId() {
+    public String getTenantId() {
         return tenantId;
     }
 
-    public void setTenantId(int tenantId) {
+    public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
     }
 
@@ -42,7 +42,7 @@ public class PmsTenant {
         this.adminPhone = adminPhone;
     }
 
-    public PmsTenant(int id, int tenantId, String tenantName, String adminPhone) {
+    public PmsTenant(int id, String tenantId, String tenantName, String adminPhone) {
         this.id = id;
         this.tenantId = tenantId;
         this.tenantName = tenantName;
@@ -59,6 +59,5 @@ public class PmsTenant {
                 '}';
     }
 
-    public PmsTenant() {
-    }
+
 }

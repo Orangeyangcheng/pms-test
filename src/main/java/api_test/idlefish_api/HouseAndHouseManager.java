@@ -283,6 +283,10 @@ public class HouseAndHouseManager {
         return JSONObject.fromObject( laststr );
     }
 
+    /**
+     * 解析闲鱼账号发布数据下架房源
+     * @throws ApiException
+     */
     @Test
     public void jsonTest() throws ApiException {
 

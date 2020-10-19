@@ -69,7 +69,7 @@ public class DataSupport {
      * 查询组织对应城市的门店信息
      * @return
      */
-    public static List<PmsStore> queryPmsStore(int tenantId,int cityId){
+    public static List<PmsStore> queryPmsStore(String tenantId,int cityId){
         SqlSession sqlSession = MyBatisUtil.getSqlSession();
         PmsTenantDao pmsTenantDao = sqlSession.getMapper( PmsTenantDao.class );
         List<PmsStore> pmsStores = pmsTenantDao.getStoreInfo( tenantId,cityId );
@@ -86,6 +86,19 @@ public class DataSupport {
         SqlSession sqlSession = MyBatisUtil.getSqlSession();
         PmsHouseDao pmsHouseDao = sqlSession.getMapper( PmsHouseDao.class );
         HouseRoom houseRoom = pmsHouseDao.queryRoomInfo( roomCode );
+        sqlSession.close();
+        return houseRoom;
+    }
+
+    /**
+     * 查询组织内可租房源
+     * @param tenantId
+     * @return
+     */
+    public static HouseRoom queryRentableRoomInfo(String tenantId){
+        SqlSession sqlSession = MyBatisUtil.getSqlSession();
+        PmsHouseDao pmsHouseDao = sqlSession.getMapper( PmsHouseDao.class );
+        HouseRoom houseRoom = pmsHouseDao.queryRentableRoomInfo( tenantId );
         sqlSession.close();
         return houseRoom;
     }

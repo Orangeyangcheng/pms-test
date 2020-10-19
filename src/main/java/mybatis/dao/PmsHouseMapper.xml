@@ -14,4 +14,23 @@
         <result property="roomCode" column="room_code"/>
         <result property="roomStatus" column="room_status"/>
     </resultMap>
+
+
+    <select id="queryRentableRoomInfo" resultType="mybatis.pojo.HouseRoom" resultMap="queryRentableRoomInfoResultMap">
+        SELECT room_code,
+        room_status,
+        house_code,
+        tenant_id,
+        house_mode
+        FROM pms_hsc_db.house_room
+        WHERE room_status = 0 and tenant_id = #{tenantId} and is_deleted = 0
+        ORDER BY create_time desc limit 1 ;
+    </select>
+    <resultMap id="queryRentableRoomInfoResultMap" type="mybatis.pojo.HouseRoom">
+        <result property="roomCode" column="room_code"/>
+        <result property="roomStatus" column="room_status"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="houseCode" column="house_code"/>
+        <result property="houseMode" column="house_mode"/>
+    </resultMap>
 </mapper>

@@ -38,6 +38,36 @@ public class HouseBO {
 
     private int houseMode;
 
+    private String houseCode;
+
+    private String roomCode;
+
+    private int tenantId;
+
+    public String getHouseCode() {
+        return houseCode;
+    }
+
+    public void setHouseCode(String houseCode) {
+        this.houseCode = houseCode;
+    }
+
+    public String getRoomCode() {
+        return roomCode;
+    }
+
+    public void setRoomCode(String roomCode) {
+        this.roomCode = roomCode;
+    }
+
+    public int getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(int tenantId) {
+        this.tenantId = tenantId;
+    }
+
     public int getHouseMode() {
         return houseMode;
     }

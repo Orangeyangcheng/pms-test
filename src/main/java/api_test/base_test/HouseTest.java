@@ -22,37 +22,19 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static api_test.uac.PmsTenantOperation.addStore;
-import static api_test.uac.UserToken.tmp1;
-import static api_test.uac.UserToken.tpm3;
+import static api_test.uac.UserToken.*;
 import static common.BeautifyJson.beautifyJson;
 import static common.HttpConfig.applicationJson;
 
 public class HouseTest {
 
-    private static String access_token = "";
 
 
 
-    private static String saveHouse = "http://tpm3-gmd.mdguanjia.com/pms-hsc/house/inner/save";
 
-    private static String roomRent = "http://tpm3-gmd.mdguanjia.com/pms-hsc/client/room/rent";
+    private static String saveHouse = "http://tpm1-gmd.mdguanjia.com/pms-hsc/house/inner/save";
 
-
-    public static UserBO getToken (){
-        UserBO userBO = new UserBO();
-        userBO.setPhone("13199989991");
-        userBO.setPwd("1234567");
-        userBO.setEnv( tpm3 );
-        PmsUser pmsUser = DataSupport.queryUserInfoByPhone( userBO.getPhone() );
-        access_token = UserToken.getToken(userBO);
-        userBO.setToken( access_token );
-        PmsTenant pmsTenant = DataSupport.queryTenantInfoByAdminPhone(userBO.getPhone());
-        userBO.setUserName( pmsUser.getName() );
-        userBO.setUserId(  pmsUser.getId()  );
-        userBO.setTenantId( pmsTenant.getTenantId() );
-        return userBO;
-    }
-
+    private static String roomRent = "http://tpm1-gmd.mdguanjia.com/pms-hsc/client/room/rent";
 
 
 
@@ -318,9 +300,9 @@ public class HouseTest {
     /**
      * 整租房源
      */
-    @Test(invocationCount = 10,groups = "HouseMode=1")
+    @Test(invocationCount = 1,groups = "HouseMode=1",threadPoolSize = 1)
     public void saveHouse_Test(){
-        UserBO userBO = getToken();
+        UserBO userBO = TestAccount.getToken();
         //随机获取小区信息
         Community community;
         community = DataSupport.getCommunity();
@@ -346,7 +328,11 @@ public class HouseTest {
         houseBO.setStoreId( pmsStore.getId() );
         houseBO.setStoreName( pmsStore.getDeptName() );
         houseBO.setHouseMode( 1 );//1-整租,2-合租
-        JSONObject params = buildHouseParams( houseBO );
+        JSONObject houseParams = buildHouseParams( houseBO );
+        //新增房源新增参数添加房源json串
+        JSONObject params = new JSONObject();
+        params.put( "saveOrUpdate",houseParams );
+
         System.out.println("========================"+"创建房源信息"+"========================");
         System.out.println( beautifyJson(params) );
 
@@ -365,7 +351,7 @@ public class HouseTest {
 
         boolean i = isCheck();
         if (i==true){
-
+            saveHouseCheck( repJson );
         }
     }
 
@@ -374,7 +360,7 @@ public class HouseTest {
      */
     @Test(invocationCount = 10,groups = "HouseMode=2")
     public void saveHouseRoom_Test(){
-        UserBO userBO = getToken();
+        UserBO userBO = TestAccount.getToken();
         //随机获取小区信息
         Community community;
         community = DataSupport.getCommunity();
@@ -400,7 +386,10 @@ public class HouseTest {
         houseBO.setStoreId( pmsStore.getId() );
         houseBO.setStoreName( pmsStore.getDeptName() );
         houseBO.setHouseMode( 2 );//1-整租,2-合租
-        JSONObject params = buildHouseParams( houseBO );
+        JSONObject houseParams = buildHouseParams( houseBO );
+
+        JSONObject params = new JSONObject();
+        params.put( "saveOrUpdate",houseParams );
         System.out.println("========================"+"创建房源信息"+"========================");
         System.out.println( beautifyJson(params) );
 
@@ -416,18 +405,30 @@ public class HouseTest {
         JSONObject repJson = JSONObject.fromObject( rep );
         System.out.println("========================"+"创建房源结果"+"========================");
         System.out.println(beautifyJson(repJson));
+
+        boolean i = isCheck();
+        if (i==true){
+            saveHouseCheck( repJson );
+        }
     }
 
-    public boolean saveHouseCheck(JSONObject jsonObject){ 
+    /**
+     * 房源接口校验通用方法
+     * @param jsonObject
+     * @return
+     */
+    public boolean saveHouseCheck(JSONObject jsonObject){
+        Assert.assertEquals( jsonObject.getInt( "code" ),200,"接口状态码校验失败" );
+        Assert.assertEquals( jsonObject.getBoolean( "success" ),true,"接口返回失败" );
         return true;
     }
 
     @Test
     public void roomRent_Test(){
-        UserBO userBO = getToken();
+        UserBO userBO = TestAccount.getToken();
         JSONObject roomRentParams = new JSONObject();
         roomRentParams.put( "houseType",2 );
-        roomRentParams.put( "roomCode","d0006289" );
+        roomRentParams.put( "roomCode","d1414895" );
         roomRentParams.put( "operateType",1 );
         roomRentParams.put( "leaseType",1 );
         roomRentParams.put( "rentBeginTime","2020-07-30 17:02:18" );
@@ -436,7 +437,7 @@ public class HouseTest {
 
         int checkIn=1;
         int checkInOut=1;
-        for (int i=0;i<=100;i++){
+        for (int i=0;i<=1;i++){
 
             HouseRoom houseRoom = DataSupport.queryRoomInfo( roomRentParams.getString( "roomCode" ) );
 
@@ -494,27 +495,10 @@ public class HouseTest {
         }
     }
 
-//    public static void main(String[] args) {
-//        Date newDay=new DateTime(new Date()).plusDays(1).toDate();
-//        SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
-//        String date = sim.format(  newDay.getTime()  );
-//        System.out.println(date);
-//    }
 
 
-    public static void main(String[] args) {
-        int stayDays = 4;
-        int monthDays = 30;
-        Long paidFee = 2000L;
-        Long itemFee = paidFee - paidFee * stayDays / monthDays;
-        System.out.println(itemFee);
 
-        MultiCurrencyMoney itemFeeMul = new MultiCurrencyMoney(paidFee).divide( monthDays ).multiply(monthDays-stayDays);
-        System.out.println(itemFeeMul);
 
-        itemFeeMul = new MultiCurrencyMoney("2000").divide(monthDays).multiply(30 - stayDays);
-        System.out.println(itemFeeMul);
-    }
 
 
 

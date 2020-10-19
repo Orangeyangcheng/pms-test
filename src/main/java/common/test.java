@@ -63,7 +63,7 @@ public class test {
     public void getPmsStoreInfo(){
         SqlSession sqlSession = MyBatisUtil.getSqlSession();
         PmsTenantDao pmsTenantDao = sqlSession.getMapper( PmsTenantDao.class );
-        List<PmsStore> pmsStores = pmsTenantDao.getStoreInfo( 95023566,330100 );
+        List<PmsStore> pmsStores = pmsTenantDao.getStoreInfo( "95023566",330100 );
         for (PmsStore pmsStore:pmsStores){
             System.out.println( pmsStore );
         }
@@ -75,6 +75,15 @@ public class test {
         SqlSession sqlSession = MyBatisUtil.getSqlSession();
         PmsHouseDao pmsHouseDao = sqlSession.getMapper( PmsHouseDao.class );
         HouseRoom houseRoom = pmsHouseDao.queryRoomInfo( "d0005943" );
+        System.out.println( houseRoom );
+        sqlSession.close();
+    }
+
+    @Test
+    public void queryRentableRoomInfo(){
+        SqlSession sqlSession = MyBatisUtil.getSqlSession();
+        PmsHouseDao pmsHouseDao = sqlSession.getMapper( PmsHouseDao.class );
+        HouseRoom houseRoom = pmsHouseDao.queryRentableRoomInfo( "09936638" );
         System.out.println( houseRoom );
         sqlSession.close();
     }

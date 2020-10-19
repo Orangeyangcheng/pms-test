@@ -23,7 +23,7 @@ public interface PmsTenantDao {
      * @param cityId
      * @return
      */
-    List<PmsStore> getStoreInfo(@Param( "tenantId" ) int tenantId, @Param( "cityId" ) int cityId );
+    List<PmsStore> getStoreInfo(@Param( "tenantId" ) String tenantId, @Param( "cityId" ) int cityId );
 
     /**
      * 根据手机号查询用户信息
