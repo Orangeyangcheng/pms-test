@@ -20,7 +20,7 @@
         <result property="adminPhone" column="admin_phone"/>
     </resultMap>
 
-    <select id="getStoreInfo" resultType="mybatis.pojo.PmsStore" parameterType = "int" resultMap="pmsStoreResultMap" >
+    <select id="getStoreInfo" resultType="mybatis.pojo.PmsStore"  resultMap="pmsStoreResultMap" >
         SELECT id,
         tenant_id,
         dept_name,
