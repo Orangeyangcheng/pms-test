@@ -10,11 +10,12 @@ import common.HttpUtil;
 import mybatis.pojo.HouseRoom;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
 import static common.BeautifyJson.beautifyJson;
 import static common.HttpConfig.applicationJson;
@@ -27,9 +28,10 @@ public class OrderTest {
     //新签初始化
     private static String xqInit = "http://tpm1-gmd.mdguanjia.com/pms-omc/xq/xqInit?houseType";
 
+    static UserBO userBO;
 
-    private static JSONObject buildLeaseParams(LeaseBO leaseBO){
-        UserBO userBO = TestAccount.getToken();
+    private static JSONObject buildLeaseParams(LeaseBO leaseBO) throws ParseException {
+        userBO = TestAccount.getToken();
         //根据当前账号查询该组织内的可租房源
         HouseRoom houseRoom = DataSupport.queryRentableRoomInfo( String.valueOf( userBO.getTenantId() ) );
         System.out.println(houseRoom);
@@ -54,6 +56,7 @@ public class OrderTest {
         leaseParam.put( "signType",leaseBO.getSignType());
         leaseParam.put( "orderType",1);
         leaseParam.put( "roomCode",houseRoom.getRoomCode());
+        leaseParam.put( "houseCode",houseRoom.getHouseCode());
         leaseParam.put( "houseType",houseRoom.getHouseMode());
 
         JSONObject lessee = new JSONObject();
@@ -64,12 +67,24 @@ public class OrderTest {
         lessee.put( "sex",1 );
         lessee.put( "birthday","" );
         leaseParam.put( "lessee",lessee);
-        leaseParam.put( "startDate",leaseBO.getStartDate());
-        if (StringUtils.isNotBlank(leaseBO.getEndDate())){
+
+        if (StringUtils.isNotBlank(leaseBO.getEndDate())&&StringUtils.isNotBlank(leaseBO.getStartDate())){
             leaseParam.put( "endDate",leaseBO.getEndDate() );
+            leaseParam.put( "startDate",leaseBO.getStartDate());
+
         }
+        else if (StringUtils.isNotBlank(String.valueOf( leaseBO.getMonths() ))){
+            leaseBO = getStartAndEndDte(leaseBO);
+            leaseParam.put( "endDate",leaseBO.getEndDate() );
+            leaseParam.put( "startDate",leaseBO.getStartDate());
+        }
+        else {
+            leaseBO = getStartAndEndDte(leaseBO);
+            leaseParam.put( "endDate",leaseBO.getEndDate() );
+            leaseParam.put( "startDate",leaseBO.getStartDate());
+        }
+
         leaseParam.put( "rentType",1 );
-        leaseParam.put( "rentWay",1 );
         leaseParam.put( "rentFee",leaseBO.getRentFee() );
         leaseParam.put( "rentFeeStr",leaseBO.getRentFee());
         leaseParam.put( "rentMonth",leaseBO.getRentMonth());
@@ -111,6 +126,8 @@ public class OrderTest {
         leaseRenter.put( "sex",1 );
         List paperworkUrlList = new ArrayList();
         leaseRenter.put( "paperworkUrlList",paperworkUrlList );
+        leaseRenters.add(leaseRenter);
+        leaseParam.put( "leaseRenters",leaseRenters);
 
         List contractPicUrlList = new ArrayList();
         leaseParam.put( "contractPicUrlList",contractPicUrlList);
@@ -121,24 +138,107 @@ public class OrderTest {
         leaseParam.put( "roomPriceStr",xqRepJsonData.getString( "roomPriceStr" ));
         leaseParam.put( "defaultSignType",1);
         leaseParam.put( "defaultLeaseIntentDictCode","");
-        leaseParam.put( "rentWayInits",xqRepJsonData.getJSONObject( "rentWayInits" ));
-        leaseParam.put( "contractPicUrlList",contractPicUrlList);
-        leaseParam.put( "contractPicUrlList",contractPicUrlList);
-        leaseParam.put( "contractPicUrlList",contractPicUrlList);
-        leaseParam.put( "contractPicUrlList",contractPicUrlList);
-        leaseParam.put( "contractPicUrlList",contractPicUrlList);
-        leaseParam.put( "contractPicUrlList",contractPicUrlList);
-        leaseParam.put( "contractPicUrlList",contractPicUrlList);
-        leaseParam.put( "contractPicUrlList",contractPicUrlList);
-        leaseParam.put( "contractPicUrlList",contractPicUrlList);
-        leaseParam.put( "contractPicUrlList",contractPicUrlList);
-        leaseParam.put( "contractPicUrlList",contractPicUrlList);
-
-        return xqRepJson;
+        List rentWayInits = xqRepJsonData.getJSONArray( "rentWayInits" );
+        leaseParam.put( "rentWayInits",rentWayInits);
+        JSONObject rentWay = (JSONObject) rentWayInits.get( 0 );
+        leaseParam.put( "rentWay",rentWay.get( "rentWay" ) );
+        leaseParam.put( "rentDay",rentWay.get( "rentDay" ) );
+        leaseParam.put( "rentMonthPriceStr",xqRepJsonData.getString( "roomPriceStr" ));
+        leaseParam.put( "rentMonthNum",xqRepJsonData.getString( "rentMonthNum" ));
+        leaseParam.put( "contractTemplates",xqRepJsonData.getString( "contractTemplates" ));
+        leaseParam.put( "parentLeaseDepositStr","");
+        leaseParam.put( "checkinExpireFlag",0);
+        leaseParam.put( "checkinExpireDay",null);
+        leaseParam.put( "rentPlanFlag",0);
+        leaseParam.put( "roomName",xqRepJsonData.getString( "roomName" ));
+        leaseParam.put( "communityAddress",xqRepJsonData.getString( "communityAddress" ));
+        leaseParam.put( "flatNoInfo",xqRepJsonData.getString( "flatNoInfo" ));
+        System.out.println("========================"+"新签信息"+"========================");
+        System.out.println(beautifyJson(leaseParam));
+        return leaseParam;
     }
 
-    public static void main(String[] args) {
+    @Test(groups = "orderTest",invocationCount = 1,enabled = true)
+    public void saveLease_Test() throws ParseException {
         LeaseBO leaseBO = new LeaseBO();
-        System.out.println(buildLeaseParams(leaseBO));
+        leaseBO.setRealName( "杨橙" );
+        leaseBO.setCardNo( "41128119940809001X" );
+        leaseBO.setMobile( "13175110032" );
+//        leaseBO.setStartDate( new Date().toString() );
+//        leaseBO.setEndDate( "2021-04-18" );
+        leaseBO.setCardType( 1 );
+        leaseBO.setRentFee( "1000" );
+        leaseBO.setDepositFee( "1000" );
+        leaseBO.setSignType( 2 );
+//        leaseBO.setMonths( 1 );
+        leaseBO.setRentMonth( "1" );
+        JSONObject leaseParams = buildLeaseParams(leaseBO);
+
+        Map<String,String> header = new HashMap<String, String>();
+        header.put( "Authorization",userBO.getToken() );
+        HttpRequest httpRequest = new HttpRequest();
+        httpRequest.setUrl(createLease);
+        httpRequest.setHeader( header );
+        httpRequest.setJsonObject( leaseParams );
+        httpRequest.setContentType( applicationJson );
+
+        String rep = HttpUtil.doPost(httpRequest);
+        System.out.println("========================"+"新签登记返回信息"+"========================");
+        JSONObject xqRepJson = JSONObject.fromObject( rep );
+        System.out.println(beautifyJson(xqRepJson));
+
+    }
+
+    public static void main(String[] args) throws ParseException {
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//        System.out.println(df.format( new Date() ).toString());
+//        Calendar cd = Calendar.getInstance();
+//        cd.set(Calendar.MONTH,11);
+//        System.out.println(cd);
+        LeaseBO leaseBO = new LeaseBO();
+
+//        leaseBO.setStartDate( "2020-04-18" );
+//        leaseBO.setMonths( 12 );
+
+        leaseBO = getStartAndEndDte( leaseBO );
+        System.out.println(leaseBO.getStartDate());
+        System.out.println(leaseBO.getEndDate());
+
+    }
+
+    public static LeaseBO getStartAndEndDte(LeaseBO leaseBO) throws ParseException {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        if (StringUtils.isNotBlank(leaseBO.getStartDate())&&StringUtils.isNotBlank(String.valueOf( leaseBO.getMonths() ))) {
+            Date date=getMonthDate(sdf.parse( leaseBO.getStartDate() ),leaseBO.getMonths());
+            leaseBO.setEndDate( sdf.format(date) );
+        }
+
+        else if (StringUtils.isNotBlank(String.valueOf( leaseBO.getMonths() ))){
+            Date date=getMonthDate(sdf.parse(sdf.format( new Date()) ),leaseBO.getMonths());
+            leaseBO.setStartDate( sdf.format( new Date()));
+            leaseBO.setEndDate( sdf.format(date) );
+        }
+        else {
+            Date date=getMonthDate(sdf.parse(sdf.format( new Date()) ),12);
+            leaseBO.setStartDate( sdf.format( new Date()));
+            leaseBO.setEndDate( sdf.format(date) );
+        }
+        return leaseBO;
+    }
+
+
+    /**
+     * 获取startDate日期后month月的日期
+     * @param startDate 开始日期
+     * @param month  几个月后
+     * @return
+     */
+    public static Date getMonthDate(Date startDate,int month){
+        LocalDateTime localDateTime = startDate.toInstant()
+                .atZone( ZoneId.systemDefault() )
+                .toLocalDateTime().plusMonths(month).minusDays( 1 );
+        Date date = Date.from(localDateTime.atZone( ZoneId.systemDefault()).toInstant());
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return date;
     }
 }
