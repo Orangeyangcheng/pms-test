@@ -10,6 +10,8 @@ import common.HttpUtil;
 import mybatis.pojo.HouseRoom;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.text.*;
@@ -30,10 +32,18 @@ public class OrderTest {
 
     static UserBO userBO;
 
+    @BeforeClass
+    private static boolean isCheck(){
+        boolean isCheck = true;
+        return isCheck;
+    }
+
     private static JSONObject buildLeaseParams(LeaseBO leaseBO) throws ParseException {
         userBO = TestAccount.getToken();
         //根据当前账号查询该组织内的可租房源
         HouseRoom houseRoom = DataSupport.queryRentableRoomInfo( String.valueOf( userBO.getTenantId() ) );
+        Assert.assertNotNull( houseRoom,"该组织没有可租房源" );
+        System.out.println("========================"+"查询该组织可租房源信息"+"========================");
         System.out.println(houseRoom);
         JSONObject houseParam = new JSONObject();
         houseParam.put( "houseType",houseRoom.getHouseMode() );
@@ -164,14 +174,15 @@ public class OrderTest {
         leaseBO.setRealName( "杨橙" );
         leaseBO.setCardNo( "41128119940809001X" );
         leaseBO.setMobile( "13175110032" );
-//        leaseBO.setStartDate( new Date().toString() );
-//        leaseBO.setEndDate( "2021-04-18" );
         leaseBO.setCardType( 1 );
         leaseBO.setRentFee( "1000" );
         leaseBO.setDepositFee( "1000" );
         leaseBO.setSignType( 2 );
-//        leaseBO.setMonths( 1 );
         leaseBO.setRentMonth( "1" );
+//        设置租期
+//        leaseBO.setStartDate( "2020-04-18" );
+//        leaseBO.setEndDate( "2021-04-17" );
+//        leaseBO.setMonths( 1 );
         JSONObject leaseParams = buildLeaseParams(leaseBO);
 
         Map<String,String> header = new HashMap<String, String>();
@@ -187,25 +198,44 @@ public class OrderTest {
         JSONObject xqRepJson = JSONObject.fromObject( rep );
         System.out.println(beautifyJson(xqRepJson));
 
+        boolean i = isCheck();
+        if (i==true){
+            saveLeaseCheck( xqRepJson );
+        }
     }
 
-    public static void main(String[] args) throws ParseException {
+    public void saveLeaseCheck(JSONObject jsonObject){
+        Assert.assertEquals( jsonObject.get( "code" ),200,"接口状态码校验失败" );
+        Assert.assertEquals( jsonObject.get( "success" ),true,"接口返回失败" );
+        JSONObject data =jsonObject.getJSONObject( "data" );
+        Assert.assertNotNull( data.getString( "url" ),"签约地址为空");
+        Assert.assertNotNull( data.getString( "orderNo" ),"租约编号为空");
+    }
+
+
+//    public static void main(String[] args) throws ParseException {
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 //        System.out.println(df.format( new Date() ).toString());
 //        Calendar cd = Calendar.getInstance();
 //        cd.set(Calendar.MONTH,11);
 //        System.out.println(cd);
-        LeaseBO leaseBO = new LeaseBO();
+//        LeaseBO leaseBO = new LeaseBO();
 
 //        leaseBO.setStartDate( "2020-04-18" );
-//        leaseBO.setMonths( 12 );
+//        leaseBO.setMonths( 11 );
+//
+//        leaseBO = getStartAndEndDte( leaseBO );
+//        System.out.println(leaseBO.getStartDate());
+//        System.out.println(leaseBO.getEndDate());
 
-        leaseBO = getStartAndEndDte( leaseBO );
-        System.out.println(leaseBO.getStartDate());
-        System.out.println(leaseBO.getEndDate());
+//    }
 
-    }
-
+    /**
+     *  设置租期时间，传入开始时间根据Months自动计算结束时间，单独传入Months根据当前时间为开始时间计算结束时间或默认为12个月
+     * @param leaseBO
+     * @return
+     * @throws ParseException
+     */
     public static LeaseBO getStartAndEndDte(LeaseBO leaseBO) throws ParseException {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         if (StringUtils.isNotBlank(leaseBO.getStartDate())&&StringUtils.isNotBlank(String.valueOf( leaseBO.getMonths() ))) {
@@ -213,7 +243,7 @@ public class OrderTest {
             leaseBO.setEndDate( sdf.format(date) );
         }
 
-        else if (StringUtils.isNotBlank(String.valueOf( leaseBO.getMonths() ))){
+        else if (leaseBO.getMonths()!=0){
             Date date=getMonthDate(sdf.parse(sdf.format( new Date()) ),leaseBO.getMonths());
             leaseBO.setStartDate( sdf.format( new Date()));
             leaseBO.setEndDate( sdf.format(date) );

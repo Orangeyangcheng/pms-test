@@ -96,10 +96,16 @@ public class DataSupport {
      * @return
      */
     public static HouseRoom queryRentableRoomInfo(String tenantId){
-        SqlSession sqlSession = MyBatisUtil.getSqlSession();
-        PmsHouseDao pmsHouseDao = sqlSession.getMapper( PmsHouseDao.class );
-        HouseRoom houseRoom = pmsHouseDao.queryRentableRoomInfo( tenantId );
-        sqlSession.close();
+        HouseRoom houseRoom = new HouseRoom();
+        try{
+            SqlSession sqlSession = MyBatisUtil.getSqlSession();
+            PmsHouseDao pmsHouseDao = sqlSession.getMapper( PmsHouseDao.class );
+            houseRoom = pmsHouseDao.queryRentableRoomInfo( tenantId );
+            sqlSession.close();
+        }
+        catch (Exception e){
+            System.out.println("查询组织可租房源异常");
+        }
         return houseRoom;
     }
 
