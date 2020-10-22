@@ -300,7 +300,7 @@ public class HouseTest {
     /**
      * 整租房源
      */
-    @Test(invocationCount = 1,groups = "HouseMode=1",threadPoolSize = 1)
+    @Test(invocationCount = 2,groups = "HouseMode=1",threadPoolSize = 1)
     public void saveHouse_Test(){
         UserBO userBO = TestAccount.getToken();
         //随机获取小区信息

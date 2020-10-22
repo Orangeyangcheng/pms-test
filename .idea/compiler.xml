@@ -6,9 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="pms_test" />
         <module name="pms-test" />
+        <module name="pms_test" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="pms-test" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
