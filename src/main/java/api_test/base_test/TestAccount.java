@@ -18,7 +18,7 @@ public class TestAccount {
      */
     public static UserBO getToken (){
         UserBO userBO = new UserBO();
-        userBO.setPhone("13133363338");
+        userBO.setPhone("13133373338");
         userBO.setPwd("1234567");
         userBO.setEnv( tmp1 );
         PmsUser pmsUser = DataSupport.queryUserInfoByPhone( userBO.getPhone() );

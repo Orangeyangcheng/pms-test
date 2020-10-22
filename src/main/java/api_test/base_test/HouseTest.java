@@ -135,12 +135,12 @@ public class HouseTest {
             List rentTypes = new ArrayList();
             JSONObject rentTypesInfo = new JSONObject();
             rentTypesInfo.put( "depositMonthNum", "1");
-            rentTypesInfo.put( "depositPrice", "799");
+            rentTypesInfo.put( "depositPrice", "3000");
             List feeTypes = new ArrayList();
             rentTypesInfo.put( "feeTypes", feeTypes);
             rentTypesInfo.put( "houseType", "");
             rentTypesInfo.put( "rentMonthNum", "3");
-            rentTypesInfo.put( "rentMonthPrice", "799");
+            rentTypesInfo.put( "rentMonthPrice", "3000");
             rentTypes.add( rentTypesInfo );
             roomInfo.put( "rentTypes", rentTypes);
 
@@ -300,7 +300,7 @@ public class HouseTest {
     /**
      * 整租房源
      */
-    @Test(invocationCount = 1,groups = "HouseMode=1",threadPoolSize = 1)
+    @Test(invocationCount = 20,groups = "HouseMode=1",threadPoolSize = 1)
     public void saveHouse_Test(){
         UserBO userBO = TestAccount.getToken();
         //随机获取小区信息
