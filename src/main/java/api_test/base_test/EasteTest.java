@@ -300,7 +300,7 @@ public class EasteTest {
         esateParams.put( "roomNamePrefix" ,"");
         esateParams.put( "sameNum","" );
         esateParams.put( "totalFloor","3" );
-        esateParams.put( "storeId",esateBo.getStoreId() );
+        esateParams.put( "storeId",String.valueOf( esateBo.getStoreId() ) );
         esateParams.put( "houseMode",esateBo.getHouseMode());
         esateParams.put( "cityName",esateBo.getCommunity().getCityName() );
         System.out.println( esateParams );
@@ -355,19 +355,17 @@ public class EasteTest {
         esateBO.setStoreName( pmsStore.getDeptName() );
         esateBO.setHouseMode( "3" );
         JSONObject esateParams = buildEsateParams( esateBO );
-        //新增房源新增参数添加房源json串
-        JSONObject params = new JSONObject();
-        params.put( "saveOrUpdate",esateParams );
+
 
         System.out.println("========================"+"创建房源信息"+"========================");
-        System.out.println( beautifyJson(params) );
+        System.out.println( beautifyJson(esateParams) );
 
         Map<String,String> header = new HashMap<String, String>();
         header.put( "Authorization",userBO.getToken() );
         HttpRequest httpRequest = new HttpRequest();
         httpRequest.setUrl(saveEsate);
         httpRequest.setHeader( header );
-        httpRequest.setJsonObject( params );
+        httpRequest.setJsonObject( esateParams );
         httpRequest.setContentType( applicationJson );
 
         String rep = HttpUtil.doPost(httpRequest);
