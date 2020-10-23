@@ -6,10 +6,13 @@ import mybatis.dao.PmsHouseDao;
 import mybatis.dao.PmsTenantDao;
 import mybatis.dao.PmsUserDao;
 import mybatis.pojo.*;
+import mybatis.util.DataSourceSqlSessionFactory;
+import mybatis.util.MapperFactory;
 import mybatis.util.MyBatisUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 public class test {
@@ -39,6 +42,19 @@ public class test {
         PmsUser pmsUsers = pmsUserDao.getUserByPhone("13175112091");
         System.out.println( pmsUsers );
         sqlSession.close();
+    }
+
+    @Test
+    public void getUserTest1() throws IOException {
+        PmsUserDao pmsUserDao = MapperFactory.createMapper(PmsUserDao.class, DataSourceSqlSessionFactory.DataSourceEnvironment.tpm3);
+        PmsUser pmsUsers = pmsUserDao.getUserByPhone("13133373338");
+        System.out.println( pmsUsers );
+//        sqlSession.close();
+//        SqlSession sqlSession = MyBatisUtil.getSqlSession();
+//        PmsUserDao pmsUserDao = sqlSession.getMapper(PmsUserDao.class);
+//        PmsUser pmsUsers = pmsUserDao.getUserByPhone("13133373338");
+//        System.out.println( pmsUsers );
+//        sqlSession.close();
     }
 
     @Test

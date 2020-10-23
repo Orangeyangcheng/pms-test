@@ -4,12 +4,21 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <!--configuration配置文件-->
 <configuration>
-    <environments default="development">
-        <environment id="development">
+    <environments default="tpm1">
+        <environment id="tpm1">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
                 <property name="url" value="jdbc:mysql://192.168.1.231:3306?serverTimezone=UTC&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf8"/>
+                <property name="username" value="program_pms"/>
+                <property name="password" value="b5222ed6a5106b9a8a07f02b81efeede"/>
+            </dataSource>
+        </environment>
+        <environment id="tpm3">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://192.168.1.233:3306?serverTimezone=UTC&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf8"/>
                 <property name="username" value="program_pms"/>
                 <property name="password" value="b5222ed6a5106b9a8a07f02b81efeede"/>
             </dataSource>

@@ -20,6 +20,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 import static common.BeautifyJson.beautifyJson;
+import static common.DataSupport.getStartAndEndDte;
 import static common.HttpConfig.applicationJson;
 
 public class OrderTest {
@@ -230,45 +231,5 @@ public class OrderTest {
 
 //    }
 
-    /**
-     *  设置租期时间，传入开始时间根据Months自动计算结束时间，单独传入Months根据当前时间为开始时间计算结束时间或默认为12个月
-     * @param leaseBO
-     * @return
-     * @throws ParseException
-     */
-    public static LeaseBO getStartAndEndDte(LeaseBO leaseBO) throws ParseException {
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        if (StringUtils.isNotBlank(leaseBO.getStartDate())&&StringUtils.isNotBlank(String.valueOf( leaseBO.getMonths() ))) {
-            Date date=getMonthDate(sdf.parse( leaseBO.getStartDate() ),leaseBO.getMonths());
-            leaseBO.setEndDate( sdf.format(date) );
-        }
 
-        else if (leaseBO.getMonths()!=0){
-            Date date=getMonthDate(sdf.parse(sdf.format( new Date()) ),leaseBO.getMonths());
-            leaseBO.setStartDate( sdf.format( new Date()));
-            leaseBO.setEndDate( sdf.format(date) );
-        }
-        else {
-            Date date=getMonthDate(sdf.parse(sdf.format( new Date()) ),12);
-            leaseBO.setStartDate( sdf.format( new Date()));
-            leaseBO.setEndDate( sdf.format(date) );
-        }
-        return leaseBO;
-    }
-
-
-    /**
-     * 获取startDate日期后month月的日期
-     * @param startDate 开始日期
-     * @param month  几个月后
-     * @return
-     */
-    public static Date getMonthDate(Date startDate,int month){
-        LocalDateTime localDateTime = startDate.toInstant()
-                .atZone( ZoneId.systemDefault() )
-                .toLocalDateTime().plusMonths(month).minusDays( 1 );
-        Date date = Date.from(localDateTime.atZone( ZoneId.systemDefault()).toInstant());
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        return date;
-    }
 }

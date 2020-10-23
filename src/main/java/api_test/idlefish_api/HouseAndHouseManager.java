@@ -34,9 +34,9 @@ public class HouseAndHouseManager {
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseItemUpdatestatusRequest req = new AlibabaIdleHouseItemUpdatestatusRequest();
         // 闲鱼房源itemId
-        req.setItemId(Long.valueOf("628255311100"));
+        req.setItemId(Long.valueOf("629715600389"));
         // 房源的目标状态，-1表示删除；-2表示下架；0表示上架(只有下架的房源可以上架）
-        req.setHouseStatus(-1L);
+        req.setHouseStatus(-2L);
         AlibabaIdleHouseItemUpdatestatusResponse rsp = client.execute(req);
         JSONObject rspJson = JSONObject.fromObject( rsp.getBody() );
         System.out.println(beautifyJson(rspJson));
@@ -50,7 +50,7 @@ public class HouseAndHouseManager {
     public void queryRoomStatus() throws ApiException {
         TaobaoClient client = new DefaultTaobaoClient(serverUrl, appKey, appSecret);
         AlibabaIdleHouseItemQueryRequest req = new AlibabaIdleHouseItemQueryRequest();
-        req.setItemId(625471945741L);
+        req.setItemId(629715600389L);
         AlibabaIdleHouseItemQueryResponse rsp = client.execute(req);
         JSONObject rspJson = JSONObject.fromObject( rsp.getBody() );
         System.out.println(beautifyJson(rspJson));
