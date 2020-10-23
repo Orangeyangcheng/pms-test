@@ -24,8 +24,6 @@ public class EasteTest {
     public static JSONObject buildEsateParams(EsateBO esateBo) {
         JSONObject esateParams = new JSONObject();
         //公寓信息
-        esateParams.put( "esateName",esateBo.getCommunity().getCommunityName() );
-        System.out.println( esateParams.get("esateName"));
         List facilityItemListe=new ArrayList();
         facilityItemListe.add("1");
         facilityItemListe.add("2");
@@ -35,11 +33,8 @@ public class EasteTest {
         facilityItemListe.add("6");
         facilityItemListe.add("8");
         facilityItemListe.add("9");
-        esateParams.put("facilityItemList",facilityItemListe);
-        esateParams.put( "buildingNo",3 );
         //公寓图片
         List pics = new ArrayList();
-        esateParams.put( "pics",pics );
         JSONObject commonPics0 = new JSONObject();
         commonPics0.put( "picUrl","http://fh-mjgy-test.oss-cn-hangzhou.aliyuncs.com/2020617103948219013.jpg");
         commonPics0.put( "originalUrl","http://fh-mjgy-test.oss-cn-hangzhou.aliyuncs.com/2020617103948219013.jpg");
@@ -61,42 +56,31 @@ public class EasteTest {
         pics.add( commonPics0 );
         pics.add( commonPics1 );
         pics.add( commonPics2 );
-        esateParams.put( "pics", pics);
-        //地址信息
-        esateParams.put( "cityId",esateBo.getCommunity().getCityId() );
-        esateParams.put( "cityName",esateBo.getCommunity().getCityName() );
-        esateParams.put( "communityAddress",esateBo.getCommunity().getAddress());
-    //  esateParams.put( "communityId",esateBo.getCommunity().getId());
-        esateParams.put( "communityName",esateBo.getCommunity().getCommunityName());
-        esateParams.put( "districtId",esateBo.getCommunity().getAreaId() );
-//        esateParams.put( "districtName",esateBo.getCommunity().getAreaName() );
-        esateParams.put( "latitude",esateBo.getCommunity().getLatitude() );
-        esateParams.put( "longitude",esateBo.getCommunity().getLongitude() );
-        esateParams.put( "houseMode",esateBo.getHouseMode());
-
         //楼层信息
-        esateParams.put( "floorRoomNum","5" );
         List floorsList=new ArrayList();
         JSONObject floors0= new JSONObject();
-        floors0.put( "floorSeq","1" );
-        floors0.put( "hasExclude","0" );
-        floors0.put( "roomNum",5);
+        floors0.put( "floorSeq",1);
+        floors0.put( "hasExclude",0 );
+        floors0.put( "roomNum","5");
+
         floors0.put( "rooms",greateRooms(floors0));
         JSONObject floors1= new JSONObject();
-        floors1.put( "floorSeq","2" );
-        floors1.put( "hasExclude","0" );
-        floors1.put( "roomNum",5 );
-        floors0.put( "rooms",greateRooms(floors0));
+        floors1.put( "floorSeq",2 );
+        floors1.put( "hasExclude",0 );
+        floors1.put( "roomNum","5" );
+
+        floors1.put( "rooms",greateRooms(floors1));
         JSONObject floors2= new JSONObject();
-        floors2.put( "floorSeq","3" );
-        floors2.put( "hasExclude","0" );
-        floors2.put( "roomNum",5 );
-        floors0.put( "rooms",greateRooms(floors0));
+        floors2.put( "floorSeq",3 );
+        floors2.put( "hasExclude",0 );
+        floors2.put( "roomNum","5");
+
+        floors2.put( "rooms",greateRooms(floors2));
 
         floorsList.add( floors0 );
         floorsList.add( floors1 );
         floorsList.add( floors2 );
-        esateParams.put( "houseMode",esateBo.getHouseMode() );
+        //房型
         List layoutsList=new ArrayList();
         //房型信息
         //房型A
@@ -123,28 +107,28 @@ public class EasteTest {
         layouts0.put( "facilityItemList",facilityItemList );
         List floors=new ArrayList();
         JSONObject floorsa=new JSONObject();
-        floorsa.put( "floorSeq","1");
+        floorsa.put( "floorSeq",1);
         List roomsLista=new ArrayList();
         JSONObject rooms0=new JSONObject();
         rooms0.put( "layoutName","" );
-        rooms0.put( "roomName","101" );
-        rooms0.put( "roomNo","101" );
+        rooms0.put( "roomName",101 );
+        rooms0.put( "roomNo",101);
         JSONObject rooms1=new JSONObject();
         rooms1.put( "layoutName","" );
-        rooms1.put( "roomName","102" );
-        rooms1.put( "roomNo","102" );
+        rooms1.put( "roomName",102 );
+        rooms1.put( "roomNo",102 );
         JSONObject rooms2=new JSONObject();
         rooms2.put( "layoutName","" );
-        rooms2.put( "roomName","103" );
-        rooms2.put( "roomNo","103" );
+        rooms2.put( "roomName",103 );
+        rooms2.put( "roomNo",103);
         JSONObject rooms3=new JSONObject();
         rooms3.put( "layoutName","" );
-        rooms3.put( "roomName","104" );
-        rooms3.put( "roomNo","104" );
+        rooms3.put( "roomName",104 );
+        rooms3.put( "roomNo",104 );
         JSONObject rooms4=new JSONObject();
         rooms4.put( "layoutName","" );
-        rooms4.put( "roomName","105" );
-        rooms4.put( "roomNo","105" );
+        rooms4.put( "roomName",105 );
+        rooms4.put( "roomNo",105 );
         roomsLista.add( rooms0);
         roomsLista.add( rooms1);
         roomsLista.add( rooms2);
@@ -152,28 +136,29 @@ public class EasteTest {
         roomsLista.add( rooms4);
         floorsa.put( "rooms",roomsLista ) ;
         List roomsListb=new ArrayList();
+
         JSONObject floorsb=new JSONObject();
-        floorsb.put( "floorSeq","2" );
+        floorsb.put( "floorSeq",2 );
         JSONObject rooms6=new JSONObject();
         rooms6.put( "layoutName","" );
-        rooms6.put( "roomName","201" );
-        rooms6.put( "roomNo","201" );
+        rooms6.put( "roomName",201 );
+        rooms6.put( "roomNo",201 );
         JSONObject rooms7=new JSONObject();
         rooms7.put( "layoutName","" );
-        rooms7.put( "roomName","202" );
-        rooms7.put( "roomNo","202" );
+        rooms7.put( "roomName",202 );
+        rooms7.put( "roomNo",202 );
         JSONObject rooms8=new JSONObject();
         rooms8.put( "layoutName","" );
-        rooms8.put( "roomName","203" );
-        rooms8.put( "roomNo","203" );
+        rooms8.put( "roomName",203 );
+        rooms8.put( "roomNo",203 );
         JSONObject rooms9=new JSONObject();
         rooms9.put( "layoutName","" );
-        rooms9.put( "roomName","204" );
-        rooms9.put( "roomNo","204" );
+        rooms9.put( "roomName",204 );
+        rooms9.put( "roomNo",204 );
         JSONObject rooms10=new JSONObject();
         rooms10.put( "layoutName","" );
-        rooms10.put( "roomName","205" );
-        rooms10.put( "roomNo","205" );
+        rooms10.put( "roomName",205 );
+        rooms10.put( "roomNo",205 );
         roomsListb.add( rooms6);
         roomsListb.add( rooms7);
         roomsListb.add( rooms8);
@@ -182,12 +167,13 @@ public class EasteTest {
         floorsb.put( "rooms",roomsListb );
         floors.add( floorsa );
         floors.add( floorsb );
-        layouts0.put( "floors",floors );
-        layouts0.put( "hallNum" ,"1");
-        layouts0.put( "houseMode",esateBo.getHouseMode() );
-        layouts0.put( "layoutArea","85" );
-        layouts0.put( "layoutFace","1" );
-        layouts0.put( "layoutFace","房型A" );
+
+        List layouts0RoomItemTagList=new ArrayList();
+        layouts0RoomItemTagList.add( "1" );
+        layouts0RoomItemTagList.add( "2" );
+        layouts0RoomItemTagList.add( "3" );
+        layouts0RoomItemTagList.add( "4" );
+        layouts0RoomItemTagList.add( "5" );
         List layoutsPics = new ArrayList();
         JSONObject layoutsPicsa1 = new JSONObject();
         layoutsPicsa1.put( "picUrl","http://fh-mjgy-test.oss-cn-hangzhou.aliyuncs.com/2020617103949505584.jpg");
@@ -198,11 +184,22 @@ public class EasteTest {
         JSONObject layoutsPicsa2 = new JSONObject();
         layoutsPicsa2.put( "picUrl","http://fh-mjgy-test.oss-cn-hangzhou.aliyuncs.com/20201021152126269227.jpg");
         layoutsPicsa2.put( "originalUrl","http://fh-mjgy-test.oss-cn-hangzhou.aliyuncs.com/20201021152126269227.jpg");
-        layoutsPicsa2.put( "picTag",null);
+        layoutsPicsa2.put( "picTag","");
         layoutsPicsa2.put( "picName","20201021152126269227.jpg");
         layoutsPics.add(layoutsPicsa1);
         layoutsPics.add( layoutsPicsa2);
+        layouts0.put( "hallNum" ,"1");
+        layouts0.put( "kitchenNum","1" );
+        layouts0.put( "layoutArea","85" );
+        layouts0.put( "layoutFace","2" );
+        layouts0.put( "layoutName","房型A" );
         layouts0.put( "pics",layoutsPics);
+        layouts0.put( "floors",floors );
+        layouts0.put( "roomItemTagList",layouts0RoomItemTagList );
+        layouts0.put( "roomNum","2");
+        layouts0.put( "toiletNum","1");
+        layouts0.put( "houseMode",esateBo.getHouseMode());
+
 
 
         //房型B
@@ -214,7 +211,7 @@ public class EasteTest {
         tenancyCondList1.add( "9" );
         tenancyCondList1.add( "8" );
         layouts1Desc.put( "tenancyCondList" ,tenancyCondList);
-        layouts1.put( "desc",layouts1Desc);
+
         List facilityItemList1 = new ArrayList();
         facilityItemList1.add( "1" );
         facilityItemList1.add( "2" );
@@ -225,31 +222,30 @@ public class EasteTest {
         facilityItemList1.add( "7" );
         facilityItemList1.add( "8" );
         facilityItemList1.add( "9" );
-        layouts1.put( "facilityItemList",facilityItemList1 );
         List floors11=new ArrayList();
         JSONObject floorsa1=new JSONObject();
-        floorsa.put( "floorSeq","3");
+        floorsa1.put( "floorSeq",3);
         List roomsLista1=new ArrayList();
         JSONObject rooms01=new JSONObject();
         rooms01.put( "layoutName","" );
-        rooms01.put( "roomName","301" );
-        rooms01.put( "roomNo","301" );
+        rooms01.put( "roomName",301 );
+        rooms01.put( "roomNo",301 );
         JSONObject rooms11=new JSONObject();
         rooms11.put( "layoutName","" );
-        rooms11.put( "roomName","302" );
-        rooms11.put( "roomNo","302" );
+        rooms11.put( "roomName",302 );
+        rooms11.put( "roomNo",302 );
         JSONObject rooms21=new JSONObject();
         rooms21.put( "layoutName","" );
-        rooms21.put( "roomName","303" );
-        rooms21.put( "roomNo","303" );
+        rooms21.put( "roomName",303 );
+        rooms21.put( "roomNo",303 );
         JSONObject rooms31=new JSONObject();
         rooms31.put( "layoutName","" );
-        rooms31.put( "roomName","304" );
-        rooms31.put( "roomNo","304" );
+        rooms31.put( "roomName",304 );
+        rooms31.put( "roomNo",304 );
         JSONObject rooms41=new JSONObject();
         rooms41.put( "layoutName","" );
-        rooms41.put( "roomName","305" );
-        rooms41.put( "roomNo","305" );
+        rooms41.put( "roomName",305 );
+        rooms41.put( "roomNo",305 );
         roomsLista1.add( rooms01);
         roomsLista1.add( rooms11);
         roomsLista1.add( rooms21);
@@ -257,12 +253,12 @@ public class EasteTest {
         roomsLista1.add( rooms41);
         floorsa1.put( "rooms",roomsLista1 ) ;
         floors11.add( floorsa1);
-        layouts1.put( "floors",floors11 );
-        layouts1.put( "hallNum" ,"1");
-        layouts1.put( "houseMode",esateBo.getHouseMode());
-        layouts1.put( "layoutArea","85" );
-        layouts1.put( "layoutFace","1" );
-        layouts1.put( "layoutFace","房型B" );
+        List layouts1RoomItemTagList=new ArrayList();
+        layouts1RoomItemTagList.add( "1" );
+        layouts1RoomItemTagList.add( "2" );
+        layouts1RoomItemTagList.add( "3" );
+        layouts1RoomItemTagList.add( "4" );
+        layouts1RoomItemTagList.add( "5" );
         List layoutsPicsb = new ArrayList();
         JSONObject layoutsPicsb2 = new JSONObject();
         layoutsPicsb2.put( "picUrl","http://fh-mjgy-test.oss-cn-hangzhou.aliyuncs.com/20201021152727944541.jpg");
@@ -270,28 +266,57 @@ public class EasteTest {
         layoutsPicsb2.put( "picTag","");
         layoutsPicsb2.put( "picName","20201021152727944541.jpg");
         layoutsPicsb.add(layoutsPicsb2);
-        layouts1.put("pics",layoutsPicsb);
         layoutsList.add( layouts0 );
         layoutsList.add( layouts1 );
+        layouts1.put( "desc",layouts1Desc);
+        layouts1.put( "facilityItemList",facilityItemList1 );
+        layouts1.put( "hallNum" ,"1");
+        layouts1.put( "kitchenNum","1" );
+        layouts1.put( "layoutArea","85" );
+        layouts1.put( "layoutCode","" );
+        layouts1.put( "layoutFace","1" );
+        layouts1.put( "layoutName","房型B" );
+        layouts1.put("pics",layoutsPicsb);
+        layouts1.put( "floors",floors11 );
+        layouts1.put( "roomItemTagList",layouts1RoomItemTagList );
+        layouts1.put( "roomNum","2");
+        layouts1.put( "toiletNum","1");
+        layouts1.put( "houseMode",esateBo.getHouseMode());
+
+        esateParams.put( "buildingNo","3" );
+        esateParams.put( "cityId",esateBo.getCommunity().getCityId() );
+        esateParams.put( "communityAddress",esateBo.getCommunity().getAddress());
+        esateParams.put( "communityName",esateBo.getCommunity().getCommunityName());
+        esateParams.put( "districtId",esateBo.getCommunity().getAreaId() );
+        esateParams.put( "estateName",esateBo.getCommunity().getCommunityName() );
+
+        esateParams.put("facilityItemList",facilityItemListe);
+        esateParams.put( "floorRoomNum","5" );
+        esateParams.put( "floors",floorsList );
+        esateParams.put( "latitude",esateBo.getCommunity().getLatitude() );
+        esateParams.put( "longitude",esateBo.getCommunity().getLongitude() );
         esateParams.put( "layouts",layoutsList );
+        esateParams.put( "pics", pics);
         esateParams.put( "roomNamePrefix" ,"");
         esateParams.put( "sameNum","" );
         esateParams.put( "totalFloor","3" );
         esateParams.put( "storeId",esateBo.getStoreId() );
+        esateParams.put( "houseMode",esateBo.getHouseMode());
+        esateParams.put( "cityName",esateBo.getCommunity().getCityName() );
         System.out.println( esateParams );
         return  esateParams;
     }
     public static List  greateRooms(JSONObject floors0){
         List roomList=new ArrayList();
-        String floorSeq= (String) floors0.get( "floorSeq" );
-        String hasExclude=(String)floors0.get("hasExclude");
-        int a=(int)floors0.get( "roomNum");
-        for (int i=0; i<a; i++){
+        int floorSeq= (int) floors0.get( "floorSeq" );
+        int hasExclude=(int)floors0.get("hasExclude");
+        for (int i=0; i<5; i++){
             JSONObject floors0rooms= new JSONObject();
-            String roomNo=floorSeq+hasExclude+i;
+
+            String roomNo=String.valueOf(floorSeq) +String.valueOf(hasExclude)+String.valueOf(i);
+            floors0rooms.put( "roomNo",Integer.parseInt(roomNo));
             floors0rooms.put( "layoutName","");
-            floors0rooms.put( "roomName",roomNo);
-            floors0rooms.put( "roomNo",roomNo);
+            floors0rooms.put( "roomName",Integer.parseInt(roomNo));
             roomList.add( floors0rooms);
         }
         return  roomList;
@@ -301,7 +326,7 @@ public class EasteTest {
         boolean isCheck = true;
         return isCheck;
     }
-    @Test(invocationCount = 2,groups = "HouseMode=1",threadPoolSize = 1)
+    @Test(invocationCount = 2,groups = "HouseMode=3",threadPoolSize = 1)
     public void saveEsate_Test(){
         UserBO userBO = TestAccount.getToken();
         //随机获取小区信息
@@ -328,7 +353,7 @@ public class EasteTest {
         esateBO.setHouseManagerTel( userBO.getPhone() );
         esateBO.setStoreId( pmsStore.getId() );
         esateBO.setStoreName( pmsStore.getDeptName() );
-        esateBO.setHouseMode( 3 );
+        esateBO.setHouseMode( "3" );
         JSONObject esateParams = buildEsateParams( esateBO );
         //新增房源新增参数添加房源json串
         JSONObject params = new JSONObject();

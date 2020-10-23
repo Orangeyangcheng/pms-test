@@ -16,7 +16,7 @@ public class EsateBO {
 
     private String houseManagerTel;
 
-    private  int houseMode;
+    private  String houseMode;
 //    private String flatBuilding;
 //
 //    private String flatDoor;
@@ -49,11 +49,11 @@ public class EsateBO {
 
     private int tenantId;
 
-    public int getHouseMode() {
+    public String getHouseMode() {
         return houseMode;
     }
 
-    public void setHouseMode(int houseMode) {
+    public void setHouseMode(String houseMode) {
         this.houseMode = houseMode;
     }
     public int getCommunityId() {
