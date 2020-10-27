@@ -6,8 +6,6 @@ import mybatis.dao.PmsHouseDao;
 import mybatis.dao.PmsTenantDao;
 import mybatis.dao.PmsUserDao;
 import mybatis.pojo.*;
-import mybatis.util.DataSourceSqlSessionFactory;
-import mybatis.util.MapperFactory;
 import mybatis.util.MyBatisUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.testng.annotations.Test;
@@ -44,24 +42,21 @@ public class test {
         sqlSession.close();
     }
 
-    @Test
-    public void getUserTest1() throws IOException {
-        PmsUserDao pmsUserDao = MapperFactory.createMapper(PmsUserDao.class, DataSourceSqlSessionFactory.DataSourceEnvironment.tpm3);
-        PmsUser pmsUsers = pmsUserDao.getUserByPhone("13133373338");
-        System.out.println( pmsUsers );
-//        sqlSession.close();
-//        SqlSession sqlSession = MyBatisUtil.getSqlSession();
-//        PmsUserDao pmsUserDao = sqlSession.getMapper(PmsUserDao.class);
-//        PmsUser pmsUsers = pmsUserDao.getUserByPhone("13133373338");
-//        System.out.println( pmsUsers );
-//        sqlSession.close();
-    }
 
     @Test
     public void getCommunity(){
         SqlSession sqlSession = MyBatisUtil.getSqlSession();
         CommunityDao communityDao = sqlSession.getMapper( CommunityDao.class );
         Community community = communityDao.getARandCommunity();
+        System.out.println( community );
+        sqlSession.close();
+    }
+
+    @Test
+    public void getCommunityByCity(){
+        SqlSession sqlSession = MyBatisUtil.getSqlSession();
+        CommunityDao communityDao = sqlSession.getMapper( CommunityDao.class );
+        Community community = communityDao.getCommunityByCity(110100);
         System.out.println( community );
         sqlSession.close();
     }

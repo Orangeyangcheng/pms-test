@@ -1,6 +1,8 @@
 package api_test.ota_api;
 
+import api_test.base_test.TestAccount;
 import api_test.uac.UserBO;
+import common.EVOcontrol;
 import common.HttpRequest;
 import common.HttpUtil;
 import net.sf.json.JSONObject;
@@ -17,33 +19,22 @@ import static api_test.uac.UserToken.online;
 import static common.BeautifyJson.beautifyJson;
 import static common.HttpConfig.applicationJson;
 
-public class ChannelTest {
+public class ChannelTest extends EVOcontrol {
 
-    public static String getChannelList = "https://gmd.mdguanjia.com/pms-ota/channel/getChannelList";
-
-    public static String getByTenantId = "https://gmd.mdguanjia.com/pms-ota/channel/getByTenantId";
-
-    public static String token = "";
-
-    @BeforeClass
-    public void getTokenTest(){
-        UserBO userBO = new UserBO();
-        userBO.setPhone("13175112092");
-        userBO.setPwd("1234567");
-        userBO.setEnv( online );
-        token = getToken(userBO);
-    }
+    //定义测试环境
+    public static String testEvo = online;
 
 
-    @Test(invocationCount = 20)
+    @Test(invocationCount = 10)
     public void getChannelList_Test(){
+        UserBO userBO = TestAccount.getToken(testEvo,true);
         Map<String,String> header = new HashMap<String, String>();
-        header.put( "Authorization",token );
+        header.put( "Authorization",userBO.getToken() );
 
         JSONObject res = new JSONObject(  );
 
         HttpRequest httpRequest = new HttpRequest();
-        httpRequest.setUrl(getChannelList);
+        httpRequest.setUrl(getAddress( testEvo,getChannelList ));
         httpRequest.setHeader( header );
         httpRequest.setJsonObject( res );
         httpRequest.setContentType( applicationJson );

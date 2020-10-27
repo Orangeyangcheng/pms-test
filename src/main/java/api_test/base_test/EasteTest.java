@@ -3,6 +3,7 @@ package api_test.base_test;
 import api_test.easte.EsateBO;
 import api_test.uac.UserBO;
 import common.DataSupport;
+import common.EVOcontrol;
 import common.HttpRequest;
 import common.HttpUtil;
 import mybatis.pojo.Community;
@@ -18,8 +19,9 @@ import static api_test.uac.PmsTenantOperation.addStore;
 import static common.BeautifyJson.beautifyJson;
 import static common.HttpConfig.applicationJson;
 
-public class EasteTest {
-    private static String  saveEsate="http://tpm1-gmd.mdguanjia.com/pms-hsc/estate/inner/save";
+public class EasteTest extends EVOcontrol {
+    //定义测试环境
+    public static String testEvo = tpm1;
 
     public static JSONObject buildEsateParams(EsateBO esateBo) {
         JSONObject esateParams = new JSONObject();
@@ -306,7 +308,8 @@ public class EasteTest {
         System.out.println( esateParams );
         return  esateParams;
     }
-    public static List  greateRooms(JSONObject floors0){
+
+    public static List greateRooms(JSONObject floors0){
         List roomList=new ArrayList();
         int floorSeq= (int) floors0.get( "floorSeq" );
         int hasExclude=(int)floors0.get("hasExclude");
@@ -321,14 +324,15 @@ public class EasteTest {
         }
         return  roomList;
     }
+
     @BeforeClass
     private static boolean isCheck(){
         boolean isCheck = true;
         return isCheck;
     }
-    @Test(invocationCount = 2,groups = "HouseMode=3",threadPoolSize = 1)
+    @Test(invocationCount = 1,groups = "HouseMode=3",threadPoolSize = 1)
     public void saveEsate_Test(){
-        UserBO userBO = TestAccount.getToken();
+        UserBO userBO = TestAccount.getToken(testEvo);
         //随机获取小区信息
         Community community;
         community = DataSupport.getCommunity();
@@ -363,7 +367,7 @@ public class EasteTest {
         Map<String,String> header = new HashMap<String, String>();
         header.put( "Authorization",userBO.getToken() );
         HttpRequest httpRequest = new HttpRequest();
-        httpRequest.setUrl(saveEsate);
+        httpRequest.setUrl(getAddress( testEvo,saveEsate ));
         httpRequest.setHeader( header );
         httpRequest.setJsonObject( esateParams );
         httpRequest.setContentType( applicationJson );

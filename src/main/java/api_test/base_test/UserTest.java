@@ -1,5 +1,7 @@
 package api_test.base_test;
 
+import api_test.uac.UserBO;
+import common.EVOcontrol;
 import common.HttpRequest;
 import common.HttpUtil;
 import net.sf.json.JSONObject;
@@ -11,21 +13,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static api_test.uac.UserToken.online;
-import static api_test.uac.UserToken.tmp1;
 import static common.BeautifyJson.beautifyJson;
 import static common.HttpConfig.applicationJson;
 
-public class UserTest {
+public class UserTest extends EVOcontrol {
 
     StringBuilder token = new StringBuilder();
-
-    public static String getUserUrl = "http://tpm1-gmd.mdguanjia.com/pms-uac/user/getUser";
+    //定义测试环境
+    public static String testEvo = online;
 
     @Test
     public void loginByPassWord_Test(){
         HttpRequest httpRequest = new HttpRequest();
         Map<String,String> params = new HashMap<String, String>();
-        String username = "13133373338";
+        String username = "13175112092";
         String password = "1234567";
 
 
@@ -34,7 +35,7 @@ public class UserTest {
         params.put("grant_type","password");
         params.put("scope","all");
         httpRequest.setParams(params);
-        httpRequest.setUrl(tmp1);
+        httpRequest.setUrl(getAddress( testEvo,oauthToken ));
         httpRequest.setContentType(applicationJson);
         Map<String,String> header = new HashMap<String, String>();
         header.put("authorization","Basic c3dvcmQ6c3dvcmRfc2VjcmV0");
@@ -60,11 +61,12 @@ public class UserTest {
 
     @Test(priority = 1)
     public void getUser_Test(){
+        UserBO userBO = TestAccount.getToken(testEvo,true);
         HttpRequest httpRequest = new HttpRequest();
-        httpRequest.setUrl(getUserUrl);
+        httpRequest.setUrl(getAddress( testEvo,getUserUrl ));
         httpRequest.setContentType(applicationJson);
         Map<String,String> header = new HashMap<String, String>();
-        header.put("Authorization",token.toString());
+        header.put("Authorization",userBO.getToken());
         httpRequest.setHeader(header);
         String rep = HttpUtil.doPost(httpRequest);
         JSONObject json = JSONObject.fromObject(rep);

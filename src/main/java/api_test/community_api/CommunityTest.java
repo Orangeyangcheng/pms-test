@@ -1,6 +1,8 @@
 package api_test.community_api;
 
+import api_test.base_test.TestAccount;
 import api_test.uac.UserBO;
+import common.EVOcontrol;
 import common.HttpRequest;
 import common.HttpUtil;
 import net.sf.json.JSONObject;
@@ -15,9 +17,9 @@ import static common.BeautifyJson.beautifyJson;
 import static common.HttpConfig.applicationJson;
 import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
-public class CommunityTest {
-
-    public static String addCommunityUrl = "http://tpm3-gmd.mdguanjia.com/pms-mdc/library/community/house/diyInput";
+public class CommunityTest extends EVOcontrol {
+    //定义测试环境
+    public static String testEvo = tpm1;
 
     private JSONObject getCommunityParams(){
         JSONObject communityParams = new JSONObject();
@@ -36,24 +38,20 @@ public class CommunityTest {
     public void addCommunityUrl_Test(){
         JSONObject res = getCommunityParams();
 
-        UserBO userBO = new UserBO();
-        userBO.setPhone("13175112092");
-        userBO.setPwd("1234567");
-        userBO.setEnv( online );
-        String token = getToken(userBO);
+        UserBO userBO = TestAccount.getToken(testEvo,true);
 
         Map<String,String> header = new HashMap<String, String>();
-        header.put( "Authorization",token );
+        header.put( "Authorization",userBO.getToken() );
 
         HttpRequest httpRequest = new HttpRequest();
-        httpRequest.setUrl(addCommunityUrl);
+        httpRequest.setUrl(getAddress( testEvo,addCommunityUrl ));
         httpRequest.setHeader( header );
         httpRequest.setJsonObject( res );
         httpRequest.setContentType( applicationJson );
 
         String rep = HttpUtil.doPost(httpRequest);
         JSONObject repJson = JSONObject.fromObject( rep );
-
+        System.out.println("========================"+"添加小区响应"+"========================");
         System.out.println(beautifyJson(repJson));
 
     }

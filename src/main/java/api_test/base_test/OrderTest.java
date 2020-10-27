@@ -5,6 +5,7 @@ import api_test.lease.LeaseBO;
 import api_test.uac.UserBO;
 import com.sun.xml.internal.stream.events.NamedEvent;
 import common.DataSupport;
+import common.EVOcontrol;
 import common.HttpRequest;
 import common.HttpUtil;
 import mybatis.pojo.HouseRoom;
@@ -21,15 +22,13 @@ import java.util.*;
 
 import static common.BeautifyJson.beautifyJson;
 import static common.DataSupport.getStartAndEndDte;
+import static common.EVOcontrol.tpm1;
 import static common.HttpConfig.applicationJson;
 
-public class OrderTest {
+public class OrderTest extends EVOcontrol {
+    //定义测试环境
+    public static String testEvo = tpm1;
 
-    //创建租约
-    private static String createLease = "http://tpm1-gmd.mdguanjia.com/pms-omc/xq/createLease";
-
-    //新签初始化
-    private static String xqInit = "http://tpm1-gmd.mdguanjia.com/pms-omc/xq/xqInit?houseType";
 
     static UserBO userBO;
 
@@ -40,7 +39,7 @@ public class OrderTest {
     }
 
     private static JSONObject buildLeaseParams(LeaseBO leaseBO) throws ParseException {
-        userBO = TestAccount.getToken();
+        userBO = TestAccount.getToken(testEvo);
         //根据当前账号查询该组织内的可租房源
         HouseRoom houseRoom = DataSupport.queryRentableRoomInfo( String.valueOf( userBO.getTenantId() ) );
         Assert.assertNotNull( houseRoom,"该组织没有可租房源" );
@@ -53,7 +52,7 @@ public class OrderTest {
         Map<String,String> header = new HashMap<String, String>();
         header.put( "Authorization",userBO.getToken() );
         HttpRequest httpRequest = new HttpRequest();
-        httpRequest.setUrl(xqInit);
+        httpRequest.setUrl(getAddress(testEvo,xqInit));
         httpRequest.setHeader( header );
         httpRequest.setJsonObject( houseParam );
         httpRequest.setContentType( applicationJson );
@@ -189,7 +188,7 @@ public class OrderTest {
         Map<String,String> header = new HashMap<String, String>();
         header.put( "Authorization",userBO.getToken() );
         HttpRequest httpRequest = new HttpRequest();
-        httpRequest.setUrl(createLease);
+        httpRequest.setUrl(getAddress(testEvo,createLease));
         httpRequest.setHeader( header );
         httpRequest.setJsonObject( leaseParams );
         httpRequest.setContentType( applicationJson );

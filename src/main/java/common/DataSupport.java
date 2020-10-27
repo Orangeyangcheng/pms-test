@@ -31,6 +31,18 @@ public class DataSupport {
     }
 
     /**
+     * 根据城市id获取随机小区
+     * @return
+     */
+    public static Community getCommunityByCity(int cityId){
+        SqlSession sqlSession = MyBatisUtil.getSqlSession();
+        CommunityDao communityDao = sqlSession.getMapper( CommunityDao.class );
+        Community community = communityDao.getCommunityByCity(cityId);
+        sqlSession.close();
+        return community;
+    }
+
+    /**
      * 根据超管手机号查询组织信息
      * @param adminPhone
      * @return

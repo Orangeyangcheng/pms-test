@@ -3,6 +3,7 @@ package api_test.base_test;
 import api_test.uac.UserBO;
 import api_test.uac.UserToken;
 import common.DataSupport;
+import common.EVOcontrol;
 import common.HttpRequest;
 import common.HttpUtil;
 import mybatis.pojo.PmsTenant;
@@ -18,28 +19,13 @@ import static api_test.uac.UserToken.*;
 import static common.BeautifyJson.beautifyJson;
 import static common.HttpConfig.applicationJson;
 
-public class BasicConfigurationTest {
+public class BasicConfigurationTest extends EVOcontrol {
 
-    private static String dictInitUrl = "https://gmd.mdguanjia.com/pms-uac/configpreferencecontract/dictInit";
-
-    private static String access_token = "";
-
-
-    private static UserBO getToken (){
-        UserBO userBO = new UserBO();
-        userBO.setPhone("13175110031");
-        userBO.setPwd("1234567");
-        userBO.setEnv( tmp1 );
-        access_token = UserToken.getToken(userBO);
-        userBO.setToken( access_token );
-//        PmsTenant pmsTenant = DataSupport.queryTenantInfoByAdminPhone(userBO.getPhone());
-//        userBO.setTenantId( pmsTenant.getTenantId() );
-        return userBO;
-    }
+    public static String testEvo = online;
 
     @Test
     public void dictInit_Test(){
-        UserBO userBO = getToken();
+        UserBO userBO = TestAccount.getToken(testEvo);
         JSONObject params = new JSONObject();
         params.put( "customerType","1" );
 
@@ -49,7 +35,7 @@ public class BasicConfigurationTest {
 
             Map<String,String> header = new HashMap();
             header.put( "Authorization",userBO.getToken() );
-            httpRequest.setUrl(dictInitUrl);
+            httpRequest.setUrl(getAddress( testEvo,dictInitUrl ));
             httpRequest.setHeader( header );
             httpRequest.setJsonObject( params );
             httpRequest.setContentType( applicationJson );

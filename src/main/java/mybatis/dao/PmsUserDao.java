@@ -1,11 +1,10 @@
 package mybatis.dao;
 
 import mybatis.pojo.PmsUser;
-import mybatis.util.Mapper;
 
 import java.util.List;
 
-public interface PmsUserDao extends Mapper {
+public interface PmsUserDao {
 
     //查询全部用户
     List<PmsUser> getPmsUserList();

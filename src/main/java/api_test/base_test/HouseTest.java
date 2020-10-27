@@ -5,10 +5,7 @@ import api_test.uac.UserBO;
 import api_test.uac.UserToken;
 import com.fht.common.utils.MultiCurrencyMoney;
 import com.mysql.cj.log.NullLogger;
-import common.BeautifyJson;
-import common.DataSupport;
-import common.HttpRequest;
-import common.HttpUtil;
+import common.*;
 import mybatis.pojo.*;
 import net.sf.json.JSONObject;
 import org.joda.time.DateTime;
@@ -26,18 +23,15 @@ import static api_test.uac.UserToken.*;
 import static common.BeautifyJson.beautifyJson;
 import static common.HttpConfig.applicationJson;
 
-public class HouseTest {
+public class HouseTest extends EVOcontrol {
+    //定义测试环境
+    public static String testEvo = tpm1;
 
-
-
-
-
-    private static String saveHouse = "http://tpm1-gmd.mdguanjia.com/pms-hsc/house/inner/save";
-
-    private static String roomRent = "http://tpm1-gmd.mdguanjia.com/pms-hsc/client/room/rent";
-
-
-
+    /**
+     * 组装保存房源请求
+     * @param houseBO
+     * @return
+     */
     public static JSONObject buildHouseParams(HouseBO houseBO){
         JSONObject houseParams = new JSONObject();
         //图片列表
@@ -300,9 +294,9 @@ public class HouseTest {
     /**
      * 整租房源
      */
-    @Test(invocationCount = 20,groups = "HouseMode=1",threadPoolSize = 1)
+    @Test(invocationCount = 1,groups = "HouseMode=1",threadPoolSize = 1)
     public void saveHouse_Test(){
-        UserBO userBO = TestAccount.getToken();
+        UserBO userBO = TestAccount.getToken(testEvo);
         //随机获取小区信息
         Community community;
         community = DataSupport.getCommunity();
@@ -339,7 +333,7 @@ public class HouseTest {
         Map<String,String> header = new HashMap<String, String>();
         header.put( "Authorization",userBO.getToken() );
         HttpRequest httpRequest = new HttpRequest();
-        httpRequest.setUrl(saveHouse);
+        httpRequest.setUrl(getAddress( testEvo,saveHouse ));
         httpRequest.setHeader( header );
         httpRequest.setJsonObject( params );
         httpRequest.setContentType( applicationJson );
@@ -360,7 +354,7 @@ public class HouseTest {
      */
     @Test(invocationCount = 10,groups = "HouseMode=2")
     public void saveHouseRoom_Test(){
-        UserBO userBO = TestAccount.getToken();
+        UserBO userBO = TestAccount.getToken(testEvo);
         //随机获取小区信息
         Community community;
         community = DataSupport.getCommunity();
@@ -396,7 +390,7 @@ public class HouseTest {
         Map<String,String> header = new HashMap<String, String>();
         header.put( "Authorization",userBO.getToken() );
         HttpRequest httpRequest = new HttpRequest();
-        httpRequest.setUrl(saveHouse);
+        httpRequest.setUrl(getAddress( testEvo,saveHouse ));
         httpRequest.setHeader( header );
         httpRequest.setJsonObject( params );
         httpRequest.setContentType( applicationJson );
@@ -412,6 +406,59 @@ public class HouseTest {
         }
     }
 
+
+
+    @Test(invocationCount = 20,groups = "HouseMode=1",threadPoolSize = 1)
+    public void saveHouseByCity(){
+        UserBO userBO = TestAccount.getToken(testEvo);
+        //随机获取小区信息
+        Community community;
+        community = DataSupport.getCommunityByCity(110100);
+        System.out.println("========================"+"获取小区信息"+"========================");
+        System.out.println( community );
+        PmsStore pmsStore;
+        List<PmsStore> pmsStores;
+        pmsStores = DataSupport.queryPmsStore(userBO.getTenantId(),community.getCityId().intValue());
+        //根据小区信息查询是否存在门店
+        if (pmsStores.size()>0){
+            pmsStore =  pmsStores.get(0);
+        }
+        //没有门店就新增
+        else {
+            pmsStore = addStore( community,userBO.getToken(),userBO.getTenantId() );
+        }
+
+        HouseBO houseBO = new HouseBO();
+        houseBO.setCommunity( community );
+        houseBO.setHouseManagerId( userBO.getUserId() );
+        houseBO.setHouseManagerName( userBO.getUserName() );
+        houseBO.setHouseManagerTel( userBO.getPhone() );
+        houseBO.setStoreId( pmsStore.getId() );
+        houseBO.setStoreName( pmsStore.getDeptName() );
+        houseBO.setHouseMode( 2 );//1-整租,2-合租
+        JSONObject houseParams = buildHouseParams( houseBO );
+        //新增房源新增参数添加房源json串
+        JSONObject params = new JSONObject();
+        params.put( "saveOrUpdate",houseParams );
+
+        System.out.println("========================"+"创建房源信息"+"========================");
+        System.out.println( beautifyJson(params) );
+
+        Map<String,String> header = new HashMap<String, String>();
+        header.put( "Authorization",userBO.getToken() );
+        HttpRequest httpRequest = new HttpRequest();
+        httpRequest.setUrl(getAddress( testEvo,saveHouse ));
+        httpRequest.setHeader( header );
+        httpRequest.setJsonObject( params );
+        httpRequest.setContentType( applicationJson );
+
+        String rep = HttpUtil.doPost(httpRequest);
+        JSONObject repJson = JSONObject.fromObject( rep );
+        System.out.println("========================"+"创建房源结果"+"========================");
+        System.out.println(beautifyJson(repJson));
+
+    }
+
     /**
      * 房源接口校验通用方法
      * @param jsonObject
@@ -425,7 +472,7 @@ public class HouseTest {
 
     @Test
     public void roomRent_Test(){
-        UserBO userBO = TestAccount.getToken();
+        UserBO userBO = TestAccount.getToken(testEvo);
         JSONObject roomRentParams = new JSONObject();
         roomRentParams.put( "houseType",2 );
         roomRentParams.put( "roomCode","d1414895" );
@@ -448,7 +495,7 @@ public class HouseTest {
                 Map<String,String> header = new HashMap();
                 header.put( "Authorization",userBO.getToken() );
                 HttpRequest httpRequest = new HttpRequest();
-                httpRequest.setUrl(roomRent);
+                httpRequest.setUrl(getAddress( tpm1,roomRent ));
                 httpRequest.setHeader( header );
                 httpRequest.setJsonObject( roomRentParams );
                 httpRequest.setContentType( applicationJson );
@@ -474,7 +521,7 @@ public class HouseTest {
                 Map<String,String> header = new HashMap();
                 header.put( "Authorization",userBO.getToken() );
                 HttpRequest httpRequest = new HttpRequest();
-                httpRequest.setUrl(roomRent);
+                httpRequest.setUrl(getAddress( testEvo,roomRent ));
                 httpRequest.setHeader( header );
                 httpRequest.setJsonObject( roomRentParams );
                 httpRequest.setContentType( applicationJson );

@@ -10,6 +10,16 @@ import java.util.List;
 
 
 public interface CommunityDao {
+        /**
+         * 随机获取小区
+         * @return
+         */
+        Community getARandCommunity();
 
-        Community  getARandCommunity();
+        /**
+         * 根据城市id获取一个小区
+         * @param cityId
+         * @return
+         */
+        Community getCommunityByCity(int cityId);
 }

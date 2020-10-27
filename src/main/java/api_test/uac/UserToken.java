@@ -1,5 +1,6 @@
 package api_test.uac;
 
+import common.EVOcontrol;
 import common.HttpRequest;
 import common.HttpUtil;
 import net.sf.json.JSONObject;
@@ -12,17 +13,7 @@ import java.util.Map;
 
 import static common.HttpConfig.applicationJson;
 
-public class UserToken {
-
-    public final static String online = "https://gmd.mdguanjia.com/pms-uac/oauth/token";
-
-    public final static String tmp1 = "http://tpm1-gmd.mdguanjia.com/pms-uac/oauth/token";
-
-    public final static String tpm3 = "http://tpm3-gmd.mdguanjia.com/pms-uac/oauth/token";
-
-    public  static String token = "";
-
-
+public class UserToken extends EVOcontrol {
 
 
     public static String getToken(UserBO userBO){
@@ -33,7 +24,7 @@ public class UserToken {
         params.put("grant_type","password");
         params.put("scope","all");
         httpRequest.setParams(params);
-        httpRequest.setUrl(userBO.getEnv());
+        httpRequest.setUrl(getAddress( userBO.getEnv(), oauthToken));
         httpRequest.setContentType(applicationJson);
         Map<String,String> header = new HashMap<String, String>();
         header.put("authorization","Basic c3dvcmQ6c3dvcmRfc2VjcmV0");
@@ -50,33 +41,15 @@ public class UserToken {
         return str.toString();
     }
 
-    @Test
-    public void getTokenByPwdTest(){
-        HttpRequest httpRequest = new HttpRequest();
-        Map<String,String> params = new HashMap<String, String>();
-        params.put("username","13175112091");
-        params.put("password","0809001");
-        params.put("grant_type","password");
-        params.put("scope","all");
-        httpRequest.setParams(params);
-        httpRequest.setUrl(tpm3);
-        httpRequest.setContentType(applicationJson);
-        Map<String,String> header = new HashMap<String, String>();
-        header.put("authorization","Basic c3dvcmQ6c3dvcmRfc2VjcmV0");
-        httpRequest.setHeader(header);
-        String rep = HttpUtil.doPost(httpRequest);
-        JSONObject json = JSONObject.fromObject(rep);
-        System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(json,true));
-        JSONObject data = json.getJSONObject("data");
-        System.out.println(data.getString("access_token"));
-    }
+
 
     @Test
     public void getTokenTest(){
         UserBO userBO = new UserBO();
-        userBO.setPhone("13177778888");
+        userBO.setPhone("13133373338");
         userBO.setPwd("1234567");
-        token = getToken(userBO);
+        userBO.setEnv(tpm1);
+        System.out.println(getToken(userBO));
     }
 
 
